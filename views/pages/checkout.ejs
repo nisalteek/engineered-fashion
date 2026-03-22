@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Checkout | ENGINEERED FASHION</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .checkout-container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 2rem;
+    }
+    
+    .checkout-form {
+      background: #1a1a2e;
+      border-radius: 20px;
+      padding: 2rem;
+      border: 1px solid rgba(102, 126, 234, 0.3);
+    }
+    
+    .checkout-form h2 {
+      margin-bottom: 1.5rem;
+      color: #667eea;
+    }
+    
+    .form-section {
+      margin-bottom: 2rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid #333;
+    }
+    
+    .form-section h3 {
+      margin-bottom: 1rem;
+      color: white;
+    }
+    
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #888;
+      font-size: 0.875rem;
+    }
+    
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 12px;
+      background: #0a0a0a;
+      border: 1px solid #333;
+      border-radius: 10px;
+      color: white;
+      font-size: 1rem;
+    }
+    
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+    
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    
+    .payment-methods {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    
+    .payment-option {
+      background: #0a0a0a;
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .payment-option:hover {
+      border-color: #667eea;
+      background: rgba(102, 126, 234, 0.1);
+    }
+    
+    .payment-option.selected {
+      border-color: #667eea;
+      background: rgba(102, 126, 234, 0.15);
+    }
+    
+    .payment-option input {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+    }
+    
+    .payment-option label {
+      flex: 1;
+      cursor: pointer;
+      font-weight: 600;
+      color: white;
+    }
+    
+    .payment-details {
+      margin-top: 0.5rem;
+      padding-left: 2rem;
+      font-size: 0.875rem;
+      color: #888;
+    }
+    
+    .card-details {
+      margin-top: 1rem;
+      padding: 1rem;
+      background: #0a0a0a;
+      border-radius: 12px;
+      display: none;
+    }
+    
+    .card-details.show {
+      display: block;
+    }
+    
+    .order-summary {
+      background: #1a1a2e;
+      border-radius: 20px;
+      padding: 2rem;
+      border: 1px solid rgba(102, 126, 234, 0.3);
+      position: sticky;
+      top: 100px;
+      height: fit-content;
+    }
+    
+    .order-summary h2 {
+      margin-bottom: 1.5rem;
+      color: #667eea;
+    }
+    
+    .cart-items {
+      margin-bottom: 1rem;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    
+    .cart-item {
+      display: flex;
+      gap: 1rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid #333;
+    }
+    
+    .cart-item img {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+    
+    .cart-item-info {
+      flex: 1;
+    }
+    
+    .cart-item-name {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    
+    .cart-item-price {
+      color: #888;
+      font-size: 0.875rem;
+    }
+    
+    .cart-item-total {
+      font-weight: 600;
+      color: #667eea;
+    }
+    
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid #333;
+    }
+    
+    .summary-row.total {
+      font-size: 1.2rem;
+      font-weight: bold;
+      border-top: 2px solid #667eea;
+      border-bottom: none;
+      margin-top: 0.5rem;
+      padding-top: 1rem;
+    }
+    
+    .summary-row.total .amount {
+      color: #667eea;
+      font-size: 1.3rem;
+    }
+    
+    .summary-row.discount {
+      color: #27ae60;
+    }
+    
+    .summary-row.discount .amount {
+      color: #27ae60;
+    }
+    
+    .place-order-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 1.5rem;
+      transition: all 0.3s;
+    }
+    
+    .place-order-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+    
+    .place-order-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    /* Promo Code Styles */
+    .promo-code-container {
+      margin-top: 1rem;
+    }
+    
+    .promo-input-group {
+      display: flex;
+      gap: 1rem;
+    }
+    
+    .promo-input {
+      flex: 1;
+      padding: 12px;
+      background: #0a0a0a;
+      border: 1px solid #333;
+      border-radius: 10px;
+      color: white;
+      font-size: 1rem;
+    }
+    
+    .promo-input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+    
+    .apply-promo-btn {
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+    
+    .apply-promo-btn:hover {
+      transform: translateY(-2px);
+    }
+    
+    .promo-message {
+      margin-top: 0.5rem;
+      font-size: 0.8rem;
+    }
+    
+    .promo-message.success {
+      color: #27ae60;
+    }
+    
+    .promo-message.error {
+      color: #e74c3c;
+    }
+    
+    .applied-promo {
+      background: rgba(39, 174, 96, 0.2);
+      border: 1px solid #27ae60;
+      border-radius: 10px;
+      padding: 10px 15px;
+      margin-top: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .applied-promo span {
+      color: #27ae60;
+    }
+    
+    .remove-promo {
+      background: none;
+      border: none;
+      color: #e74c3c;
+      cursor: pointer;
+      font-size: 1.2rem;
+    }
+    
+    @media (max-width: 768px) {
+      .checkout-container {
+        grid-template-columns: 1fr;
+      }
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+  
+  <div class="checkout-container">
+    <div class="checkout-form">
+      <h2>Checkout</h2>
+      
+      <form id="checkoutForm">
+        <div class="form-section">
+          <h3>Shipping Information</h3>
+          <div class="form-group">
+            <label>Full Name *</label>
+            <input type="text" id="fullName" required>
+          </div>
+          <div class="form-group">
+            <label>Address *</label>
+            <input type="text" id="address" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>City *</label>
+              <input type="text" id="city" required>
+            </div>
+            <div class="form-group">
+              <label>State *</label>
+              <input type="text" id="state" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Zip Code *</label>
+              <input type="text" id="zipCode" required>
+            </div>
+            <div class="form-group">
+              <label>Country *</label>
+              <input type="text" id="country" value="Sri Lanka" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Phone Number *</label>
+            <input type="tel" id="phone" required>
+          </div>
+        </div>
+        
+        <div class="form-section">
+          <h3>Payment Method</h3>
+          <div class="payment-methods">
+            <div class="payment-option" onclick="selectPayment('cod')">
+              <input type="radio" name="paymentMethod" value="cod" id="cod" checked>
+              <label for="cod">💵 Cash on Delivery</label>
+            </div>
+            <div class="payment-option" onclick="selectPayment('card')">
+              <input type="radio" name="paymentMethod" value="card" id="card">
+              <label for="card">💳 Credit / Debit Card</label>
+            </div>
+            <div class="payment-option" onclick="selectPayment('bank')">
+              <input type="radio" name="paymentMethod" value="bank" id="bank">
+              <label for="bank">🏦 Bank Transfer</label>
+            </div>
+          </div>
+          
+          <div id="cardDetails" class="card-details">
+            <div class="form-group">
+              <label>Card Number</label>
+              <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456">
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Expiry Date</label>
+                <input type="text" id="expiryDate" placeholder="MM/YY">
+              </div>
+              <div class="form-group">
+                <label>CVV</label>
+                <input type="text" id="cvv" placeholder="123">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Cardholder Name</label>
+              <input type="text" id="cardholderName" placeholder="Name on card">
+            </div>
+          </div>
+          
+          <div id="bankDetails" class="card-details">
+            <div class="form-group">
+              <label>Account Number</label>
+              <input type="text" id="accountNumber" placeholder="123456789">
+            </div>
+            <div class="form-group">
+              <label>Bank Name</label>
+              <input type="text" id="bankName" placeholder="Bank of Ceylon">
+            </div>
+            <div class="form-group">
+              <label>Account Holder Name</label>
+              <input type="text" id="accountHolder" placeholder="Name as per account">
+            </div>
+          </div>
+          
+          <div class="payment-details" id="codDetails">
+            <p>💰 Pay when you receive your order. Cash only.</p>
+          </div>
+        </div>
+        
+        <!-- Promo Code Section -->
+        <div class="form-section">
+          <h3>Promo Code</h3>
+          <div class="promo-code-container">
+            <div class="promo-input-group">
+              <input type="text" id="promoCode" placeholder="Enter promo code" class="promo-input">
+              <button onclick="applyPromoCode()" class="apply-promo-btn">Apply</button>
+            </div>
+            <div id="promoMessage" class="promo-message"></div>
+            <div id="appliedPromo" class="applied-promo" style="display: none;">
+              <span>🎉 Promo code applied!</span>
+              <button onclick="removePromoCode()" class="remove-promo">✕</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    
+    <div class="order-summary">
+      <h2>Order Summary</h2>
+      <div id="cartItems" class="cart-items">
+        <div class="loading">Loading cart...</div>
+      </div>
+      
+      <div class="summary-row">
+        <span>Subtotal</span>
+        <span id="subtotal">$0.00</span>
+      </div>
+      <div class="summary-row">
+        <span>Shipping</span>
+        <span id="shipping">$0.00</span>
+      </div>
+      <div class="summary-row total">
+        <span>Total</span>
+        <span id="total" class="amount">$0.00</span>
+      </div>
+      
+      <button class="place-order-btn" onclick="placeOrder()">Place Order</button>
+    </div>
+  </div>
+  
+  <div id="receiptModal" class="receipt-modal" style="display: none;">
+    <div class="receipt-modal-content">
+      <div class="receipt-modal-header">
+        <h2>🎉 Order Confirmed!</h2>
+        <button class="receipt-close" onclick="closeReceipt()">&times;</button>
+      </div>
+      <div id="receiptContent" class="receipt-content"></div>
+      <div class="receipt-modal-footer">
+        <button class="btn-print" onclick="printReceipt()">🖨️ Print Receipt</button>
+        <button class="btn-continue" onclick="continueShopping()">Continue Shopping</button>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .receipt-modal {
+      position: fixed;
+      z-index: 3000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(5px);
+    }
+    
+    .receipt-modal-content {
+      background: white;
+      border-radius: 20px;
+      max-width: 600px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+      animation: modalSlideIn 0.3s ease;
+    }
+    
+    @keyframes modalSlideIn {
+      from {
+        opacity: 0;
+        transform: scale(0.9) translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+    
+    .receipt-modal-header {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      padding: 1.5rem;
+      border-radius: 20px 20px 0 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+    }
+    
+    .receipt-modal-header h2 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+    
+    .receipt-close {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 28px;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+    
+    .receipt-close:hover {
+      transform: scale(1.1);
+    }
+    
+    .receipt-content {
+      padding: 2rem;
+      background: white;
+    }
+    
+    .receipt-modal-footer {
+      padding: 1.5rem;
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      border-top: 1px solid #eee;
+    }
+    
+    .btn-print, .btn-continue {
+      padding: 10px 24px;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+    
+    .btn-print {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+    }
+    
+    .btn-continue {
+      background: #f0f0f0;
+      color: #333;
+    }
+    
+    .btn-print:hover, .btn-continue:hover {
+      transform: translateY(-2px);
+    }
+    
+    /* Enhanced Receipt Styles */
+    .receipt {
+      font-family: 'Inter', 'Courier New', monospace;
+      max-width: 500px;
+      margin: 0 auto;
+      color: #1a1a2e;
+    }
+    
+    .receipt-header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid #667eea;
+    }
+    
+    .receipt-header h2 {
+      color: #667eea;
+      margin-bottom: 0.5rem;
+      font-size: 1.8rem;
+      font-weight: bold;
+    }
+    
+    .receipt-header p {
+      color: #555;
+      font-size: 0.85rem;
+      margin: 0.25rem 0;
+    }
+    
+    .receipt-info {
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+      background: #f8f9fa;
+      border-radius: 12px;
+      border-left: 4px solid #667eea;
+    }
+    
+    .receipt-info p {
+      margin: 0.5rem 0;
+      font-size: 0.9rem;
+      color: #2c3e50;
+    }
+    
+    .receipt-info strong {
+      color: #667eea;
+      font-weight: 700;
+    }
+    
+    .receipt-items {
+      margin-bottom: 1.5rem;
+    }
+    
+    .receipt-items h4 {
+      color: #667eea;
+      margin-bottom: 0.75rem;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border-bottom: 2px solid #667eea;
+      display: inline-block;
+      padding-bottom: 0.25rem;
+    }
+    
+    .receipt-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    
+    .receipt-item span:first-child {
+      font-weight: 500;
+      color: #2c3e50;
+    }
+    
+    .receipt-item span:last-child {
+      font-weight: 600;
+      color: #667eea;
+    }
+    
+    .receipt-totals {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 2px solid #e0e0e0;
+    }
+    
+    .receipt-total-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+    }
+    
+    .receipt-total-row span:first-child {
+      color: #555;
+      font-weight: 500;
+    }
+    
+    .receipt-total-row span:last-child {
+      font-weight: 600;
+      color: #2c3e50;
+    }
+    
+    .receipt-grand-total {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-top: 0.5rem;
+      padding-top: 0.75rem;
+      border-top: 2px solid #667eea;
+    }
+    
+    .receipt-grand-total span:first-child {
+      color: #667eea;
+      font-size: 1.1rem;
+    }
+    
+    .receipt-grand-total span:last-child {
+      color: #667eea;
+      font-size: 1.3rem;
+      font-weight: 800;
+    }
+    
+    .receipt-footer {
+      text-align: center;
+      margin-top: 1.5rem;
+      padding-top: 1rem;
+      border-top: 2px dashed #ddd;
+      font-size: 0.75rem;
+      color: #888;
+    }
+    
+    .receipt-footer p {
+      margin: 0.25rem 0;
+    }
+    
+    @media print {
+      .receipt-modal-content {
+        box-shadow: none;
+        margin: 0;
+        padding: 0;
+      }
+      .receipt-modal-header, .receipt-modal-footer, .receipt-close {
+        display: none;
+      }
+      .receipt-content {
+        padding: 0;
+      }
+      .receipt {
+        color: #000 !important;
+      }
+      .receipt-info {
+        background: #f5f5f5 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+    }
+  </style>
+
+  <script>
+    let cartData = null;
+    let selectedPayment = 'cod';
+    let appliedPromo = null;
+    
+    function selectPayment(method) {
+      selectedPayment = method;
+      
+      document.getElementById('cod').checked = (method === 'cod');
+      document.getElementById('card').checked = (method === 'card');
+      document.getElementById('bank').checked = (method === 'bank');
+      
+      document.querySelectorAll('.payment-option').forEach(opt => {
+        opt.classList.remove('selected');
+      });
+      event.currentTarget.classList.add('selected');
+      
+      document.getElementById('cardDetails').classList.remove('show');
+      document.getElementById('bankDetails').classList.remove('show');
+      document.getElementById('codDetails').style.display = 'none';
+      
+      if (method === 'card') {
+        document.getElementById('cardDetails').classList.add('show');
+      } else if (method === 'bank') {
+        document.getElementById('bankDetails').classList.add('show');
+      } else {
+        document.getElementById('codDetails').style.display = 'block';
+      }
+    }
+    
+    async function loadCart() {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        window.location.href = '/login';
+        return;
+      }
+      
+      try {
+        const response = await fetch('/api/cart', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await response.json();
+        cartData = data;
+        
+        if (!data.items || data.items.length === 0) {
+          window.location.href = '/cart';
+          return;
+        }
+        
+        let itemsHtml = '';
+        let subtotal = 0;
+        
+        data.items.forEach(item => {
+          const itemTotal = item.product.price * item.quantity;
+          subtotal += itemTotal;
+          itemsHtml += `
+            <div class="cart-item">
+              <img src="${item.product.image || '/images/default.jpg'}">
+              <div class="cart-item-info">
+                <div class="cart-item-name">${item.product.name}</div>
+                <div class="cart-item-price">Qty: ${item.quantity} x $${item.product.price}</div>
+              </div>
+              <div class="cart-item-total">$${itemTotal.toFixed(2)}</div>
+            </div>
+          `;
+        });
+        
+        document.getElementById('cartItems').innerHTML = itemsHtml;
+        
+        const shipping = subtotal > 100 ? 0 : 10;
+        const total = subtotal + shipping;
+        
+        document.getElementById('subtotal').textContent = `$${subtotal.toFixed(2)}`;
+        document.getElementById('shipping').textContent = shipping === 0 ? 'FREE' : `$${shipping.toFixed(2)}`;
+        document.getElementById('total').textContent = `$${total.toFixed(2)}`;
+      } catch (error) {
+        console.error('Error loading cart:', error);
+      }
+    }
+    
+    async function applyPromoCode() {
+      const promoCode = document.getElementById('promoCode').value.trim();
+      if (!promoCode) {
+        showPromoMessage('Please enter a promo code', 'error');
+        return;
+      }
+      
+      const subtotal = parseFloat(document.getElementById('subtotal').textContent.replace('$', ''));
+      
+      const btn = document.querySelector('.apply-promo-btn');
+      btn.textContent = 'APPLYING...';
+      btn.disabled = true;
+      
+      try {
+        const response = await fetch('/api/promo/validate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code: promoCode, subtotal })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          appliedPromo = data.promotion;
+          
+          updateOrderSummaryWithDiscount(appliedPromo);
+          
+          showPromoMessage(data.promotion.message, 'success');
+          document.getElementById('promoCode').disabled = true;
+          document.getElementById('appliedPromo').style.display = 'flex';
+          document.querySelector('.apply-promo-btn').style.display = 'none';
+        } else {
+          showPromoMessage(data.message, 'error');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        showPromoMessage('Error applying promo code', 'error');
+      } finally {
+        btn.textContent = 'Apply';
+        btn.disabled = false;
+      }
+    }
+    
+    function updateOrderSummaryWithDiscount(promo) {
+      const subtotal = parseFloat(document.getElementById('subtotal').textContent.replace('$', ''));
+      const shipping = document.getElementById('shipping').textContent === 'FREE' ? 0 : 
+                       parseFloat(document.getElementById('shipping').textContent.replace('$', ''));
+      
+      const discountAmount = parseFloat(promo.discountAmount);
+      const newTotal = parseFloat(promo.newTotal);
+      const finalTotal = newTotal + shipping;
+      
+      let discountRow = document.querySelector('.summary-row.discount');
+      if (!discountRow) {
+        discountRow = document.createElement('div');
+        discountRow.className = 'summary-row discount';
+        const summaryContainer = document.querySelector('.order-summary');
+        const totalRow = document.querySelector('.summary-row.total');
+        summaryContainer.insertBefore(discountRow, totalRow);
+      }
+      
+      discountRow.innerHTML = `
+        <span>Discount (${promo.discountPercentage}% off)</span>
+        <span class="amount">-$${discountAmount.toFixed(2)}</span>
+      `;
+      
+      document.getElementById('total').textContent = `$${finalTotal.toFixed(2)}`;
+    }
+    
+    function removePromoCode() {
+      appliedPromo = null;
+      
+      const discountRow = document.querySelector('.summary-row.discount');
+      if (discountRow) {
+        discountRow.remove();
+      }
+      
+      const subtotal = parseFloat(document.getElementById('subtotal').textContent.replace('$', ''));
+      const shipping = document.getElementById('shipping').textContent === 'FREE' ? 0 : 
+                       parseFloat(document.getElementById('shipping').textContent.replace('$', ''));
+      const total = subtotal + shipping;
+      document.getElementById('total').textContent = `$${total.toFixed(2)}`;
+      
+      document.getElementById('promoCode').disabled = false;
+      document.getElementById('promoCode').value = '';
+      document.getElementById('appliedPromo').style.display = 'none';
+      document.querySelector('.apply-promo-btn').style.display = 'block';
+      showPromoMessage('Promo code removed', 'success');
+    }
+    
+    function showPromoMessage(message, type) {
+      const messageDiv = document.getElementById('promoMessage');
+      messageDiv.textContent = message;
+      messageDiv.className = `promo-message ${type}`;
+      setTimeout(() => {
+        if (messageDiv.textContent === message) {
+          messageDiv.textContent = '';
+          messageDiv.className = 'promo-message';
+        }
+      }, 3000);
+    }
+    
+    async function placeOrder() {
+      const fullName = document.getElementById('fullName').value;
+      const address = document.getElementById('address').value;
+      const city = document.getElementById('city').value;
+      const state = document.getElementById('state').value;
+      const zipCode = document.getElementById('zipCode').value;
+      const phone = document.getElementById('phone').value;
+      
+      if (!fullName || !address || !city || !state || !zipCode || !phone) {
+        alert('Please fill in all shipping information');
+        return;
+      }
+      
+      const shippingAddress = { fullName, address, city, state, zipCode, country: 'Sri Lanka', phone };
+      const paymentMethod = selectedPayment;
+      
+      if (paymentMethod === 'card') {
+        const cardNumber = document.getElementById('cardNumber').value;
+        const expiryDate = document.getElementById('expiryDate').value;
+        const cvv = document.getElementById('cvv').value;
+        if (!cardNumber || !expiryDate || !cvv) {
+          alert('Please fill in card details');
+          return;
+        }
+      }
+      
+      if (paymentMethod === 'bank') {
+        const accountNumber = document.getElementById('accountNumber').value;
+        const bankName = document.getElementById('bankName').value;
+        if (!accountNumber || !bankName) {
+          alert('Please fill in bank details');
+          return;
+        }
+      }
+      
+      const token = localStorage.getItem('token');
+      const btn = document.querySelector('.place-order-btn');
+      btn.textContent = 'PLACING ORDER...';
+      btn.disabled = true;
+      
+      const orderData = { 
+        shippingAddress, 
+        paymentMethod,
+        promoCode: appliedPromo ? appliedPromo.code : null,
+        discountAmount: appliedPromo ? parseFloat(appliedPromo.discountAmount) : 0
+      };
+      
+      try {
+        const response = await fetch('/api/orders/create', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(orderData)
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          const orderResponse = await fetch(`/api/orders/${data.orderId}`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+          });
+          const orderData = await orderResponse.json();
+          showReceipt(orderData.order);
+        } else {
+          alert(data.message || 'Failed to place order');
+          btn.textContent = 'Place Order';
+          btn.disabled = false;
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Error placing order. Please try again.');
+        btn.textContent = 'Place Order';
+        btn.disabled = false;
+      }
+    }
+    
+    let lastOrder = null;
+    
+    function showReceipt(order) {
+      lastOrder = order;
+      const receiptHtml = generateReceipt(order);
+      document.getElementById('receiptContent').innerHTML = receiptHtml;
+      document.getElementById('receiptModal').style.display = 'flex';
+    }
+    
+    function generateReceipt(order) {
+      const date = new Date(order.createdAt).toLocaleString();
+      const orderId = order._id.toString().slice(-8).toUpperCase();
+      
+      let itemsHtml = '';
+      order.items.forEach(item => {
+        itemsHtml += `
+          <div class="receipt-item">
+            <span>${item.name} × ${item.quantity}</span>
+            <span>$${(item.price * item.quantity).toFixed(2)}</span>
+          </div>
+        `;
+      });
+      
+      // Show discount with promo code if applied
+      let discountHtml = '';
+      if (order.discountAmount > 0) {
+        if (order.promoCode) {
+          discountHtml = `
+            <div class="receipt-total-row" style="color: #27ae60;">
+              <span>🎟️ Promo Code: ${order.promoCode} (${order.discountPercentage}% off)</span>
+              <span style="color: #27ae60;">-$${order.discountAmount.toFixed(2)}</span>
+            </div>
+          `;
+        } else {
+          discountHtml = `
+            <div class="receipt-total-row" style="color: #27ae60;">
+              <span>🎉 Discount Applied</span>
+              <span style="color: #27ae60;">-$${order.discountAmount.toFixed(2)}</span>
+            </div>
+          `;
+        }
+      }
+      
+      return `
+        <div class="receipt">
+          <div class="receipt-header">
+            <h2>✨ ENGINEERED FASHION ✨</h2>
+            <p>Smart clothing powered by innovation</p>
+            <p><strong>Order #${orderId}</strong></p>
+            <p>📅 ${date}</p>
+          </div>
+          
+          <div class="receipt-info">
+            <p><strong>👤 Customer:</strong> ${order.shippingAddress.fullName}</p>
+            <p><strong>📞 Phone:</strong> ${order.shippingAddress.phone}</p>
+            <p><strong>📍 Address:</strong> ${order.shippingAddress.address}, ${order.shippingAddress.city}, ${order.shippingAddress.state} ${order.shippingAddress.zipCode}</p>
+            <p><strong>💳 Payment:</strong> ${order.paymentMethod === 'cod' ? 'Cash on Delivery' : order.paymentMethod === 'card' ? '💳 Credit/Debit Card' : '🏦 Bank Transfer'}</p>
+            <p><strong>📦 Status:</strong> <span style="color: #27ae60;">${order.status.toUpperCase()}</span></p>
+          </div>
+          
+          <div class="receipt-items">
+            <h4>🛍️ ORDER ITEMS</h4>
+            ${itemsHtml}
+          </div>
+          
+          <div class="receipt-totals">
+            <div class="receipt-total-row">
+              <span>Subtotal:</span>
+              <span>$${order.itemsPrice.toFixed(2)}</span>
+            </div>
+            ${discountHtml}
+            <div class="receipt-total-row">
+              <span>Shipping:</span>
+              <span>${order.shippingPrice === 0 ? 'FREE' : '$' + order.shippingPrice.toFixed(2)}</span>
+            </div>
+            <div class="receipt-total-row receipt-grand-total">
+              <span>TOTAL AMOUNT:</span>
+              <span>$${order.totalPrice.toFixed(2)}</span>
+            </div>
+          </div>
+          
+          <div class="receipt-footer">
+            <p>🎉 Thank you for shopping with us!</p>
+            <p>📧 support@engineeredfashion.com</p>
+            <p>🌐 www.engineeredfashion.com</p>
+            <p>⭐ Follow us on social media for exclusive offers ⭐</p>
+          </div>
+        </div>
+      `;
+    }
+    
+    function printReceipt() {
+      const printContent = document.getElementById('receiptContent').innerHTML;
+      const printWindow = window.open('', '_blank');
+      printWindow.document.write(`
+        <html>
+          <head>
+            <title>Order Receipt</title>
+            <style>
+              body {
+                font-family: 'Inter', 'Courier New', monospace;
+                padding: 20px;
+              }
+              @media print {
+                body {
+                  padding: 0;
+                }
+              }
+              .receipt {
+                max-width: 500px;
+                margin: 0 auto;
+              }
+              .receipt-header {
+                text-align: center;
+                border-bottom: 2px solid #667eea;
+                padding-bottom: 1rem;
+                margin-bottom: 1.5rem;
+              }
+              .receipt-header h2 {
+                color: #667eea;
+              }
+              .receipt-info {
+                background: #f8f9fa;
+                padding: 1rem;
+                border-radius: 12px;
+                margin-bottom: 1.5rem;
+              }
+              .receipt-item {
+                display: flex;
+                justify-content: space-between;
+                padding: 0.5rem 0;
+                border-bottom: 1px solid #eee;
+              }
+              .receipt-grand-total {
+                border-top: 2px solid #667eea;
+                margin-top: 0.5rem;
+                padding-top: 0.5rem;
+                font-weight: bold;
+              }
+            </style>
+          </head>
+          <body>
+            ${printContent}
+            <script>
+              window.onload = function() {
+                window.print();
+                setTimeout(function() { window.close(); }, 500);
+              };
+            <\/script>
+          </body>
+        </html>
+      `);
+      printWindow.document.close();
+    }
+    
+    function closeReceipt() {
+      document.getElementById('receiptModal').style.display = 'none';
+    }
+    
+    function continueShopping() {
+      window.location.href = '/products';
+    }
+    
+    // Initialize
+    loadCart();
+  </script>
+</body>
+</html>

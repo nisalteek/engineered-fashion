@@ -1,0 +1,60 @@
+<%- include('partials/header', { title: product ? 'Edit Product' : 'Add Product', currentPage: 'products' }) %>
+
+<div class="page-header">
+  <a href="/admin/products" class="btn-back">← Back to Products</a>
+  <h1 style="margin-top: 1rem;"><%= product ? 'Edit Product' : 'Add New Product' %></h1>
+  <p><%= product ? 'Update product details' : 'Create a new product for your store' %></p>
+</div>
+
+<div class="section">
+  <form action="/admin/products<%= product ? '/' + product._id : '' %>" method="POST">
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;">
+      <div>
+        <label style="display: block; margin-bottom: 0.5rem; color: rgba(255,255,255,0.7);">Product Name *</label>
+        <input type="text" name="name" value="<%= product ? product.name : '' %>" required style="width: 100%; padding: 12px; background: #0a0a0a; border: 1px solid #333; border-radius: 10px; color: white;">
+      </div>
+      
+      <div>
+        <label style="display: block; margin-bottom: 0.5rem; color: rgba(255,255,255,0.7);">Price *</label>
+        <input type="number" name="price" value="<%= product ? product.price : '' %>" step="0.01" required style="width: 100%; padding: 12px; background: #0a0a0a; border: 1px solid #333; border-radius: 10px; color: white;">
+      </div>
+      
+      <div>
+        <label style="display: block; margin-bottom: 0.5rem; color: rgba(255,255,255,0.7);">Category</label>
+        <select name="category" style="width: 100%; padding: 12px; background: #0a0a0a; border: 1px solid #333; border-radius: 10px; color: white;">
+          <option value="">Select Category</option>
+          <option value="Jackets" <%= product && product.category === 'Jackets' ? 'selected' : '' %>>Jackets</option>
+          <option value="Shirts" <%= product && product.category === 'Shirts' ? 'selected' : '' %>>Shirts</option>
+          <option value="Hoodies" <%= product && product.category === 'Hoodies' ? 'selected' : '' %>>Hoodies</option>
+          <option value="Pants" <%= product && product.category === 'Pants' ? 'selected' : '' %>>Pants</option>
+          <option value="Accessories" <%= product && product.category === 'Accessories' ? 'selected' : '' %>>Accessories</option>
+        </select>
+      </div>
+      
+      <div>
+        <label style="display: block; margin-bottom: 0.5rem; color: rgba(255,255,255,0.7);">Stock Quantity</label>
+        <input type="number" name="stock" value="<%= product ? product.stock : 0 %>" style="width: 100%; padding: 12px; background: #0a0a0a; border: 1px solid #333; border-radius: 10px; color: white;">
+      </div>
+      
+      <div style="grid-column: span 2;">
+        <label style="display: block; margin-bottom: 0.5rem; color: rgba(255,255,255,0.7);">Description</label>
+        <textarea name="description" rows="4" style="width: 100%; padding: 12px; background: #0a0a0a; border: 1px solid #333; border-radius: 10px; color: white;"><%= product ? product.description : '' %></textarea>
+      </div>
+      
+      <div style="grid-column: span 2;">
+        <label style="display: block; margin-bottom: 0.5rem; color: rgba(255,255,255,0.7);">Image URL</label>
+        <input type="text" name="image" value="<%= product ? product.image : '' %>" placeholder="/images/product.jpg" style="width: 100%; padding: 12px; background: #0a0a0a; border: 1px solid #333; border-radius: 10px; color: white;">
+      </div>
+    </div>
+    
+    <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+      <button type="submit" class="btn-update"><%= product ? 'Update Product' : 'Create Product' %></button>
+      <a href="/admin/products" class="btn-back" style="background: #333; text-decoration: none;">Cancel</a>
+    </div>
+  </form>
+</div>
+
+</main>
+</div>
+</body>
+</html>

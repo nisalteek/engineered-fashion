@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Fashion</title>
+  <link rel="stylesheet" href="/css/style.css">
+
+  <!-- AOS Animation -->
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+</head>
+
+<body>
+
+<!-- 🔹 NAVBAR - USE THE PARTIAL INSTEAD OF HARDCODED -->
+<%- include('../partials/navbar') %>
+
+<!-- 🔹 HERO SECTION -->
+<section class="hero">
+  <div class="hero-text" data-aos="fade-up">
+    <h1>ENGINEERED FASHION</h1>
+    <p>Smart clothing powered by innovation</p>
+    <a href="/products" class="btn">Explore Collection</a>
+  </div>
+</section>
+
+<!-- 🔹 FEATURED PRODUCTS -->
+<section class="products">
+  <h2 data-aos="fade-up">Featured Collection</h2>
+
+  <div class="product-grid">
+    <% if (products && products.length > 0) { %>
+      <% products.forEach(product => { %>
+        <div class="product-card" data-aos="zoom-in">
+          <img src="<%= product.image || '/images/p1.jpg' %>" alt="<%= product.name %>">
+          <h3><%= product.name %></h3>
+          <p class="price">$<%= product.price %></p>
+          <a href="/products/<%= product._id %>" class="btn-view">View Details</a>
+        </div>
+      <% }) %>
+    <% } else { %>
+      <div class="no-products">
+        <p>No products available yet. Check back soon!</p>
+      </div>
+    <% } %>
+  </div>
+</section>
+
+<!-- 🔹 PROMOTION BANNER -->
+<section class="promo" data-aos="fade-up">
+  <div class="promo-container">
+    <% if (typeof promotions !== 'undefined' && promotions && promotions.length > 0) { %>
+      <% var bestPromo = promotions[0]; %>
+      <h2><%= bestPromo.title %></h2>
+      <p><%= bestPromo.description || 'Limited time offer on selected items!' %></p>
+      <div class="promo-offer">
+        <span class="discount-badge"><%= bestPromo.discountPercentage %>% OFF</span>
+        <p class="promo-dates">
+          Offer valid until: <%= new Date(bestPromo.endDate).toLocaleDateString() %>
+        </p>
+      </div>
+      <a href="/products" class="btn shop-now">Shop Now →</a>
+    <% } else { %>
+      <h2>20% OFF with Bank Cards 💳</h2>
+      <p>Limited time offer on all products</p>
+      <a href="/products" class="btn shop-now">Shop Now →</a>
+    <% } %>
+  </div>
+</section>
+
+<!-- 🔹 FOOTER -->
+<footer>
+  <p>© 2026 SmartWear</p>
+</footer>
+
+<!-- Floating Chatbot Icon -->
+<div class="chatbot-icon" id="chatbotIcon">
+  <div class="chatbot-icon-inner">💬</div>
+</div>
+
+<!-- Chatbot Window (Hidden by default) -->
+<div class="chatbot-window" id="chatbotWindow">
+  <div class="chatbot-header">
+    <span>AI Assistant</span>
+    <button class="chatbot-close" id="chatbotClose">✕</button>
+  </div>
+  <div class="chatbot-messages" id="chatbotMessages">
+    <div class="message bot">
+      Hello! 👋 I'm your AI assistant. How can I help you today?
+    </div>
+  </div>
+  <div class="chatbot-input-area">
+    <input type="text" id="chatbotInput" placeholder="Type your message..." autocomplete="off">
+    <button id="chatbotSend">Send</button>
+  </div>
+</div>
+
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+<script src="/js/chatbot.js"></script>
+<script>
+  AOS.init();
+</script>
+</body>
+</html>

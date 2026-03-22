@@ -1,0 +1,42 @@
+<%- include('partials/header', { title: 'Orders', currentPage: 'orders' }) %>
+
+<div class="page-header">
+  <h1>Order Management</h1>
+  <p>View and manage all customer orders</p>
+</div>
+
+<div class="data-table">
+  <table>
+    <thead>
+      <tr>
+        <th>Order ID</th>
+        <th>Customer</th>
+        <th>Date</th>
+        <th>Total</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (orders && orders.length > 0) { %>
+        <% orders.forEach(order => { %>
+          <tr>
+            <td>#<%= order._id.toString().slice(-8) %></td>
+            <td><%= order.user ? order.user.name : 'N/A' %></td>
+            <td><%= new Date(order.createdAt).toLocaleDateString() %></td>
+            <td>$<%= order.totalPrice.toFixed(2) %></td>
+            <td><span class="status-badge status-<%= order.status %>"><%= order.status.toUpperCase() %></span></td>
+            <td><a href="/admin/orders/<%= order._id %>" class="btn-view">View Details</a></td>
+          </tr>
+        <% }) %>
+      <% } else { %>
+        <tr><td colspan="6" style="text-align: center;">No orders found</td></tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+
+</main>
+</div>
+</body>
+</html>

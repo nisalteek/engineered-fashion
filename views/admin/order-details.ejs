@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Details | Admin Panel</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0a0a0a;
+      color: white;
+    }
+    
+    .admin-container {
+      display: flex;
+      min-height: 100vh;
+    }
+    
+    .admin-sidebar {
+      width: 280px;
+      background: #1a1a2e;
+      border-right: 1px solid #333;
+      padding: 2rem;
+    }
+    
+    .admin-sidebar h2 {
+      color: #667eea;
+      margin-bottom: 2rem;
+    }
+    
+    .admin-sidebar nav a {
+      display: block;
+      padding: 0.75rem 1rem;
+      color: #fff;
+      text-decoration: none;
+      margin-bottom: 0.5rem;
+      border-radius: 8px;
+    }
+    
+    .admin-sidebar nav a:hover {
+      background: #667eea;
+    }
+    
+    .admin-main {
+      flex: 1;
+      padding: 2rem;
+    }
+    
+    .order-details {
+      background: #1a1a2e;
+      border-radius: 15px;
+      padding: 2rem;
+    }
+    
+    .order-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #333;
+    }
+    
+    .order-status {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+    
+    .status-select {
+      padding: 8px 16px;
+      border-radius: 8px;
+      background: #0a0a0a;
+      color: white;
+      border: 1px solid #667eea;
+    }
+    
+    .btn-update {
+      background: #667eea;
+      color: white;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    
+    .section {
+      margin-bottom: 2rem;
+    }
+    
+    .section h3 {
+      color: #667eea;
+      margin-bottom: 1rem;
+    }
+    
+    .customer-info {
+      background: #0a0a0a;
+      padding: 1rem;
+      border-radius: 10px;
+    }
+    
+    .order-items {
+      background: #0a0a0a;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    
+    .order-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 1rem;
+      border-bottom: 1px solid #333;
+    }
+    
+    .status-history {
+      background: #0a0a0a;
+      border-radius: 10px;
+      padding: 1rem;
+    }
+    
+    .history-item {
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #333;
+    }
+    
+    .back-btn {
+      background: #333;
+      color: white;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-container">
+    <aside class="admin-sidebar">
+      <h2>Admin Panel</h2>
+      <nav>
+        <a href="/admin/dashboard">Dashboard</a>
+        <a href="/admin/orders">Orders</a>
+        <a href="/admin/users">Users</a>
+        <a href="/admin/products">Products</a>
+        <a href="/admin/logout">Logout</a>
+      </nav>
+    </aside>
+    
+    <main class="admin-main">
+      <button class="back-btn" onclick="history.back()">← Back</button>
+      
+      <div class="order-details">
+        <div class="order-header">
+          <div>
+            <h1>Order #<%= order._id.toString().slice(-8) %></h1>
+            <p>Placed on: <%= new Date(order.createdAt).toLocaleString() %></p>
+          </div>
+          <div class="order-status">
+            <select id="statusSelect" class="status-select">
+              <option value="pending" <%= order.status === 'pending' ? 'selected' : '' %>>Pending</option>
+              <option value="processing" <%= order.status === 'processing' ? 'selected' : '' %>>Processing</option>
+              <option value="shipped" <%= order.status === 'shipped' ? 'selected' : '' %>>Shipped</option>
+              <option value="delivered" <%= order.status === 'delivered' ? 'selected' : '' %>>Delivered</option>
+              <option value="cancelled" <%= order.status === 'cancelled' ? 'selected' : '' %>>Cancelled</option>
+            </select>
+            <button class="btn-update" onclick="updateStatus()">Update Status</button>
+          </div>
+        </div>
+        
+        <div class="section">
+          <h3>Customer Information</h3>
+          <div class="customer-info">
+            <p><strong>Name:</strong> <%= order.user.name %></p>
+            <p><strong>Email:</strong> <%= order.user.email %></p>
+            <p><strong>Phone:</strong> <%= order.shippingAddress.phone || 'N/A' %></p>
+          </div>
+        </div>
+        
+        <div class="section">
+          <h3>Shipping Address</h3>
+          <div class="customer-info">
+            <p><%= order.shippingAddress.fullName %></p>
+            <p><%= order.shippingAddress.address %></p>
+            <p><%= order.shippingAddress.city %>, <%= order.shippingAddress.state %> <%= order.shippingAddress.zipCode %></p>
+            <p><%= order.shippingAddress.country %></p>
+          </div>
+        </div>
+        
+        <div class="section">
+          <h3>Order Items</h3>
+          <div class="order-items">
+            <% order.items.forEach(item => { %>
+              <div class="order-item">
+                <div>
+                  <strong><%= item.name %></strong>
+                  <p>Qty: <%= item.quantity %> x $<%= item.price %></p>
+                </div>
+                <div>
+                  <strong>$<%= (item.price * item.quantity).toFixed(2) %></strong>
+                </div>
+              </div>
+            <% }) %>
+            <div class="order-item" style="background: #667eea20; font-weight: bold;">
+              <div>Subtotal</div>
+              <div>$<%= order.itemsPrice.toFixed(2) %></div>
+            </div>
+            <div class="order-item">
+              <div>Shipping</div>
+              <div>$<%= order.shippingPrice.toFixed(2) %></div>
+            </div>
+            <div class="order-item" style="background: #667eea20; font-weight: bold;">
+              <div>Total</div>
+              <div>$<%= order.totalPrice.toFixed(2) %></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="section">
+          <h3>Status History</h3>
+          <div class="status-history">
+            <% order.statusHistory.forEach(history => { %>
+              <div class="history-item">
+                <strong><%= history.status.toUpperCase() %></strong> - 
+                <%= new Date(history.date).toLocaleString() %>
+                <% if (history.note) { %>
+                  <p style="color: #888; font-size: 0.875rem;"><%= history.note %></p>
+                <% } %>
+              </div>
+            <% }) %>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+  
+  <script>
+    async function updateStatus() {
+      const status = document.getElementById('statusSelect').value;
+      const note = prompt('Add a note (optional):', `Order status updated to ${status}`);
+      
+      const token = localStorage.getItem('token');
+      
+      try {
+        const response = await fetch(`/admin/orders/<%= order._id %>/status`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ status, note })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          alert('Order status updated!');
+          window.location.reload();
+        } else {
+          alert(data.message || 'Failed to update status');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Error updating status');
+      }
+    }
+  </script>
+</body>
+</html>

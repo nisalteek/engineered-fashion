@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register | Smart Fashion</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .register-container {
+      max-width: 500px;
+      margin: 50px auto;
+      padding: 40px;
+      background: #1a1a2e;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+    
+    .register-container h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #667eea;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #ccc;
+    }
+    
+    .form-group input {
+      width: 100%;
+      padding: 12px;
+      background: #0a0a0a;
+      border: 1px solid #333;
+      border-radius: 10px;
+      color: white;
+      font-size: 16px;
+    }
+    
+    .form-group input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+    
+    .btn-register {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    
+    .btn-register:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102,126,234,0.4);
+    }
+    
+    .login-link {
+      text-align: center;
+      margin-top: 20px;
+      color: #888;
+    }
+    
+    .login-link a {
+      color: #667eea;
+      text-decoration: none;
+    }
+    
+    .error-message {
+      background: rgba(231,76,60,0.2);
+      border: 1px solid #e74c3c;
+      color: #e74c3c;
+      padding: 10px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    
+    .success-message {
+      background: rgba(46,204,113,0.2);
+      border: 1px solid #2ecc71;
+      color: #2ecc71;
+      padding: 10px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+  
+  <div class="register-container">
+    <h2>Create Account</h2>
+    
+    <% if (error) { %>
+      <div class="error-message"><%= error %></div>
+    <% } %>
+    
+    <% if (success) { %>
+      <div class="success-message"><%= success %></div>
+    <% } %>
+    
+    <form id="registerForm">
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" id="name" required>
+      </div>
+      
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" id="email" required>
+      </div>
+      
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="password" required>
+      </div>
+      
+      <button type="submit" class="btn-register">Register</button>
+    </form>
+    
+    <div class="login-link">
+      Already have an account? <a href="/login">Login here</a>
+    </div>
+  </div>
+  
+  <script>
+    document.getElementById('registerForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      
+      const submitBtn = document.querySelector('.btn-register');
+      const originalText = submitBtn.textContent;
+      submitBtn.textContent = 'REGISTERING...';
+      submitBtn.disabled = true;
+      
+      try {
+        // Register
+        const registerResponse = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, password })
+        });
+        
+        const registerData = await registerResponse.json();
+        
+        if (registerData.success) {
+          // Auto login after registration
+          const loginResponse = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+          });
+          
+          const loginData = await loginResponse.json();
+          
+          if (loginData.success) {
+            // Store token and user
+            localStorage.setItem('token', loginData.token);
+            localStorage.setItem('user', JSON.stringify(loginData.user));
+            
+            // Set server session
+            await fetch('/api/auth/session', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ user: loginData.user })
+            });
+            
+            // Check if there's a pending product to add to cart
+            const pendingProduct = localStorage.getItem('pendingProduct');
+            if (pendingProduct) {
+              localStorage.removeItem('pendingProduct');
+              // Add to cart
+              const cartResponse = await fetch('/api/cart/add', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${loginData.token}`
+                },
+                body: JSON.stringify({ productId: pendingProduct, quantity: 1 })
+              });
+              
+              if (cartResponse.ok) {
+                alert('Registered and added to cart!');
+                window.location.href = '/cart';
+                return;
+              }
+            }
+            
+            alert('Registration successful! You are now logged in.');
+            window.location.href = '/';
+          } else {
+            alert('Registration successful! Please login.');
+            window.location.href = '/login';
+          }
+        } else {
+          alert(registerData.message || 'Registration failed');
+          submitBtn.textContent = originalText;
+          submitBtn.disabled = false;
+        }
+      } catch (error) {
+        console.error('Registration error:', error);
+        alert('Registration failed. Please try again.');
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

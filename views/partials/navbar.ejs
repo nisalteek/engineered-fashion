@@ -1,0 +1,126 @@
+<nav class="navbar">
+  <div class="logo">ENGINEERED FASHION</div>
+
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/products">Products</a></li>
+    <li><a href="/promotions">Offers</a></li>
+    
+    <!-- User logged in -->
+    <% if (user && user.role === 'user') { %>
+      <li><a href="/cart">🛒 Cart</a></li>
+      <li><a href="/my-orders">📦 My Orders</a></li>
+      <li><span style="color: #667eea;">👋 Hi, <%= user.name %></span></li>
+      <li><a href="/logout" style="color: #fdfdfd;">🚪 Logout</a></li>
+    <% } %>
+    
+    <!-- Admin logged in -->
+    <% if (admin && admin.username) { %>
+      <li><a href="/admin/dashboard" style="background: linear-gradient(135deg, #667eea, #764ba2); padding: 8px 16px; border-radius: 20px;">👑 Dashboard</a></li>
+      <li><a href="/admin/logout" style="color: #ffffff;">🚪 Logout</a></li>
+    <% } %>
+    
+    <!-- Guest (not logged in) -->
+    <% if (!user && !admin) { %>
+      <li><a href="/login" style="background: linear-gradient(135deg, #667eea, #764ba2); padding: 8px 16px; border-radius: 20px;">🔐 Login</a></li>
+      <li><a href="/register" style="border: 1px solid #667eea; padding: 8px 16px; border-radius: 20px;">📝 Register</a></li>
+    <% } %>
+  </ul>
+
+  <div class="menu-toggle">☰</div>
+</nav>
+
+<style>
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 5%;
+    background: linear-gradient(135deg, #0f0f1a, #0a0a0f);
+    border-bottom: 1px solid rgba(102, 126, 234, 0.2);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+  
+  .logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .nav-links {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+  }
+  
+  .nav-links li {
+    list-style: none;
+  }
+  
+  .nav-links a {
+    color: white;
+    text-decoration: none;
+    transition: all 0.3s;
+    font-weight: 500;
+  }
+  
+  .nav-links a:hover {
+    color: #667eea;
+  }
+  
+  .nav-links span {
+    color: #667eea;
+  }
+  
+  .menu-toggle {
+    display: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: white;
+  }
+  
+  @media (max-width: 768px) {
+    .menu-toggle {
+      display: block;
+    }
+    
+    .nav-links {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: #0f0f1a;
+      flex-direction: column;
+      padding: 1rem;
+      text-align: center;
+      gap: 1rem;
+      z-index: 999;
+    }
+    
+    .nav-links.active {
+      display: flex;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const menuToggle = document.querySelector('.menu-toggle');
+    const navLinks = document.querySelector('.nav-links');
+    
+    if (menuToggle && navLinks) {
+      menuToggle.addEventListener('click', function() {
+        navLinks.classList.toggle('active');
+      });
+    }
+  });
+</script>

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Offers & Promotions | ENGINEERED FASHION</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0a0a0a;
+      color: white;
+    }
+
+    /* Promotions Hero */
+    .promo-hero {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      padding: 4rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .promo-hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+      background-size: 50px 50px;
+      animation: moveGrid 20s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes moveGrid {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(50px, 50px); }
+    }
+
+    .promo-hero h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .promo-hero p {
+      font-size: 1.2rem;
+      opacity: 0.9;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Promotions Section */
+    .promotions-section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+    }
+
+    .promotions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 2rem;
+    }
+
+    .promotion-card {
+      background: #111;
+      border-radius: 20px;
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border: 1px solid rgba(102, 126, 234, 0.2);
+      position: relative;
+    }
+
+    .promotion-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      border-color: #667eea;
+    }
+
+    .discount-badge {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: linear-gradient(135deg, #e74c3c, #c0392b);
+      padding: 8px 16px;
+      border-radius: 30px;
+      font-weight: bold;
+      font-size: 1.2rem;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      z-index: 2;
+    }
+
+    .promotion-info {
+      padding: 2rem;
+    }
+
+    .promotion-title {
+      font-size: 1.4rem;
+      font-weight: bold;
+      margin-bottom: 0.75rem;
+      color: white;
+    }
+
+    .promotion-description {
+      color: #aaa;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      margin: 0.75rem 0;
+    }
+
+    .promotion-dates {
+      display: flex;
+      justify-content: space-between;
+      margin: 1rem 0;
+      padding: 0.75rem 0;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      font-size: 0.85rem;
+      color: #888;
+    }
+
+    .promotion-dates span {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .active-banner {
+      background: rgba(39, 174, 96, 0.2);
+      border: 1px solid rgba(39, 174, 96, 0.3);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      color: #27ae60;
+      display: inline-block;
+      margin-top: 0.5rem;
+    }
+
+    .btn-shop {
+      width: 100%;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .btn-shop:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102,126,234,0.4);
+    }
+
+    .no-promotions {
+      text-align: center;
+      padding: 4rem;
+      background: #111;
+      border-radius: 20px;
+    }
+
+    .no-promotions h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .no-promotions p {
+      color: #888;
+    }
+
+    .no-promotions a {
+      color: #667eea;
+      text-decoration: none;
+    }
+
+    .no-promotions a:hover {
+      text-decoration: underline;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .promo-hero h1 {
+        font-size: 2rem;
+      }
+      
+      .promo-hero p {
+        font-size: 1rem;
+      }
+      
+      .promotions-section {
+        padding: 2rem 1rem;
+      }
+      
+      .promotions-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      
+      .discount-badge {
+        font-size: 1rem;
+        padding: 6px 12px;
+      }
+      
+      .promotion-title {
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- Navbar -->
+<%- include('../partials/navbar') %>
+
+<!-- Promotions Hero -->
+<section class="promo-hero">
+  <h1>🎉 SPECIAL OFFERS</h1>
+  <p>Limited time deals on engineered fashion</p>
+</section>
+
+<!-- Promotions Section -->
+<section class="promotions-section">
+  <% if (promotions && promotions.length > 0) { %>
+    <div class="promotions-grid">
+      <% promotions.forEach((promo, index) => { %>
+        <div class="promotion-card" style="animation: fadeInUp 0.4s ease forwards; animation-delay: <%= index * 0.1 %>s; opacity: 0;">
+          <div class="discount-badge">
+            <%= promo.discountPercentage %>% OFF
+          </div>
+          <div class="promotion-info">
+            <div class="promotion-title"><%= promo.title %></div>
+            <div class="promotion-description"><%= promo.description || 'Special offer on selected items' %></div>
+            <div class="promotion-dates">
+              <span>📅 Starts: <%= new Date(promo.startDate).toLocaleDateString() %></span>
+              <span>⏰ Ends: <%= new Date(promo.endDate).toLocaleDateString() %></span>
+            </div>
+            <div class="active-banner">
+              🔥 ACTIVE OFFER
+            </div>
+            <button class="btn-shop" onclick="window.location.href='/products'">
+              SHOP NOW →
+            </button>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } else { %>
+    <div class="no-promotions">
+      <h3>✨ No Active Promotions</h3>
+      <p>Check back soon for exciting offers on engineered fashion!</p>
+      <a href="/products">Browse Products →</a>
+    </div>
+  <% } %>
+</section>
+
+</body>
+</html>

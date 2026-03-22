@@ -1,0 +1,166 @@
+<%- include('partials/header', { title: 'User Details', currentPage: 'users' }) %>
+
+<div class="page-header">
+  <a href="/admin/users" class="btn-back">← Back to Users</a>
+  <h1 style="margin-top: 1rem;">User Details</h1>
+  <p>View and manage user information</p>
+</div>
+
+<div class="section">
+  <h2>Personal Information</h2>
+  <div class="info-box" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+    <div>
+      <p style="color: #888;">Full Name</p>
+      <p style="font-size: 1.1rem;"><%= user.name %></p>
+    </div>
+    <div>
+      <p style="color: #888;">Email Address</p>
+      <p style="font-size: 1.1rem;"><%= user.email %></p>
+    </div>
+    <div>
+      <p style="color: #888;">Role</p>
+      <p>
+        <span class="role-badge role-<%= user.role %>" style="display: inline-block;">
+          <%= user.role.toUpperCase() %>
+        </span>
+      </p>
+    </div>
+    <div>
+      <p style="color: #888;">Member Since</p>
+      <p style="font-size: 1.1rem;"><%= new Date(user.createdAt).toLocaleDateString() %></p>
+    </div>
+    <% if (user.phone) { %>
+    <div>
+      <p style="color: #888;">Phone</p>
+      <p style="font-size: 1.1rem;"><%= user.phone %></p>
+    </div>
+    <% } %>
+  </div>
+</div>
+
+<div class="section">
+  <h2>Role Management</h2>
+  <div class="info-box">
+    <p style="margin-bottom: 1rem;">Change user role:</p>
+    <select id="roleSelect" class="status-select" style="padding: 10px; width: 200px;">
+      <option value="user" <%= user.role === 'user' ? 'selected' : '' %>>User</option>
+      <option value="admin" <%= user.role === 'admin' ? 'selected' : '' %>>Admin</option>
+    </select>
+    <button onclick="updateRole()" class="btn-update" style="margin-left: 1rem;">Update Role</button>
+  </div>
+</div>
+
+<div class="section">
+  <h2>Order History</h2>
+  <div class="data-table">
+    <table>
+      <thead>
+        <tr>
+          <th>Order ID</th>
+          <th>Date</th>
+          <th>Total</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (orders && orders.length > 0) { %>
+          <% orders.forEach(order => { %>
+            <tr>
+              <td>#<%= order._id.toString().slice(-8) %></td>
+              <td><%= new Date(order.createdAt).toLocaleDateString() %></td>
+              <td>$<%= order.totalPrice.toFixed(2) %></td>
+              <td><span class="status-badge status-<%= order.status %>"><%= order.status.toUpperCase() %></span></td>
+              <td><a href="/admin/orders/<%= order._id %>" class="btn-view">View Order</a></td>
+            </tr>
+          <% }) %>
+        <% } else { %>
+          <tr><td colspan="5" style="text-align: center;">No orders placed by this user</td></tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="section" style="border-color: rgba(231,76,60,0.3);">
+  <h2 style="color: #e74c3c;">Danger Zone</h2>
+  <div class="info-box" style="background: rgba(231,76,60,0.1);">
+    <p style="margin-bottom: 1rem; color: #e74c3c;">⚠️ Warning: This action cannot be undone. Deleting a user will also delete all their orders.</p>
+    <button onclick="deleteUser()" class="btn-update" style="background: #e74c3c;">Delete User Permanently</button>
+  </div>
+</div>
+
+<script>
+  async function updateRole() {
+    const role = document.getElementById('roleSelect').value;
+    const token = localStorage.getItem('token');
+    
+    try {
+      const response = await fetch(`/admin/users/<%= user._id %>/role`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ role })
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        alert('User role updated successfully!');
+        window.location.reload();
+      } else {
+        alert(data.message || 'Failed to update role');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Error updating role');
+    }
+  }
+  
+  async function deleteUser() {
+    if (!confirm('⚠️ WARNING: This will permanently delete this user and ALL their orders. This action cannot be undone. Are you sure?')) {
+      return;
+    }
+    
+    const token = localStorage.getItem('token');
+    
+    try {
+      const response = await fetch(`/admin/users/<%= user._id %>`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        alert('User deleted successfully');
+        window.location.href = '/admin/users';
+      } else {
+        alert(data.message || 'Failed to delete user');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Error deleting user');
+    }
+  }
+</script>
+
+<style>
+  .status-select {
+    padding: 8px 16px;
+    border-radius: 8px;
+    background: #0a0a0a;
+    color: white;
+    border: 1px solid #667eea;
+    cursor: pointer;
+  }
+</style>
+
+</main>
+</div>
+</body>
+</html>

@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Shopping Cart | ENGINEERED FASHION</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0a0a0a;
+      color: white;
+    }
+
+    .cart-container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 20px;
+    }
+
+    .cart-container h1 {
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Cart Layout */
+    .cart-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 2rem;
+    }
+
+    /* Cart Items */
+    .cart-items {
+      background: #1a1a2e;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid rgba(102, 126, 234, 0.2);
+    }
+
+    .cart-header {
+      display: grid;
+      grid-template-columns: 3fr 1fr 1fr 0.5fr;
+      background: #0a0a0a;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid #333;
+      font-weight: 600;
+      color: #888;
+    }
+
+    .cart-item {
+      display: grid;
+      grid-template-columns: 3fr 1fr 1fr 0.5fr;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid #333;
+      transition: all 0.3s;
+    }
+
+    .cart-item:hover {
+      background: rgba(102, 126, 234, 0.05);
+    }
+
+    .item-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .item-info img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 12px;
+    }
+
+    .item-details h3 {
+      font-size: 1rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .item-details p {
+      font-size: 0.75rem;
+      color: #888;
+    }
+
+    .item-price {
+      font-weight: 600;
+      color: #667eea;
+    }
+
+    .quantity-control {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .quantity-control button {
+      width: 30px;
+      height: 30px;
+      background: #667eea;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .quantity-control button:hover {
+      transform: scale(1.05);
+    }
+
+    .quantity-control span {
+      min-width: 30px;
+      text-align: center;
+    }
+
+    .item-total {
+      font-weight: 700;
+      color: white;
+    }
+
+    .remove-btn {
+      background: rgba(231, 76, 60, 0.2);
+      color: #e74c3c;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .remove-btn:hover {
+      background: rgba(231, 76, 60, 0.4);
+      transform: scale(1.05);
+    }
+
+    /* Order Summary */
+    .order-summary {
+      background: #1a1a2e;
+      border-radius: 20px;
+      padding: 1.5rem;
+      border: 1px solid rgba(102, 126, 234, 0.2);
+      position: sticky;
+      top: 100px;
+      height: fit-content;
+    }
+
+    .order-summary h2 {
+      font-size: 1.25rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid #333;
+      color: #667eea;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.75rem 0;
+    }
+
+    .summary-row.total {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 2px solid #667eea;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    .summary-row.total .amount {
+      color: #667eea;
+      font-size: 1.3rem;
+    }
+
+    .free-shipping {
+      color: #27ae60;
+      font-size: 0.8rem;
+      margin-top: 0.25rem;
+    }
+
+    .checkout-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 1.5rem;
+      transition: all 0.3s;
+    }
+
+    .checkout-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .empty-cart {
+      text-align: center;
+      padding: 4rem;
+      background: #1a1a2e;
+      border-radius: 20px;
+    }
+
+    .empty-cart h2 {
+      margin-bottom: 1rem;
+      color: #888;
+    }
+
+    .empty-cart .btn {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 12px 30px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      text-decoration: none;
+      border-radius: 30px;
+    }
+
+    @media (max-width: 768px) {
+      .cart-wrapper {
+        grid-template-columns: 1fr;
+      }
+      
+      .cart-header {
+        display: none;
+      }
+      
+      .cart-item {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        text-align: center;
+      }
+      
+      .item-info {
+        justify-content: center;
+      }
+      
+      .quantity-control {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+  
+  <div class="cart-container">
+    <h1>Shopping Cart</h1>
+    
+    <div id="cartContent">
+      <div class="loading">Loading cart...</div>
+    </div>
+  </div>
+  
+  <script>
+    let cartData = null;
+    
+    async function loadCart() {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        document.getElementById('cartContent').innerHTML = `
+          <div class="empty-cart">
+            <h2>Please login to view cart</h2>
+            <a href="/login" class="btn">Login</a>
+          </div>
+        `;
+        return;
+      }
+      
+      try {
+        const response = await fetch('/api/cart', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        cartData = await response.json();
+        
+        if (!cartData.items || cartData.items.length === 0) {
+          document.getElementById('cartContent').innerHTML = `
+            <div class="empty-cart">
+              <h2>Your cart is empty</h2>
+              <p>Add some products to get started</p>
+              <a href="/products" class="btn">Continue Shopping</a>
+            </div>
+          `;
+          return;
+        }
+        
+        let subtotal = 0;
+        let itemsHtml = `
+          <div class="cart-wrapper">
+            <div class="cart-items">
+              <div class="cart-header">
+                <div>Product</div>
+                <div>Price</div>
+                <div>Quantity</div>
+                <div>Total</div>
+              </div>
+        `;
+        
+        cartData.items.forEach(item => {
+          const itemTotal = item.product.price * item.quantity;
+          subtotal += itemTotal;
+          
+          itemsHtml += `
+            <div class="cart-item">
+              <div class="item-info">
+                <img src="${item.product.image || '/images/default.jpg'}" alt="${item.product.name}">
+                <div class="item-details">
+                  <h3>${item.product.name}</h3>
+                  <p>${item.product.description || 'Smart clothing'}</p>
+                </div>
+              </div>
+              <div class="item-price">$${item.product.price.toFixed(2)}</div>
+              <div class="quantity-control">
+                <button onclick="updateQuantity('${item._id}', ${item.quantity - 1})">-</button>
+                <span>${item.quantity}</span>
+                <button onclick="updateQuantity('${item._id}', ${item.quantity + 1})">+</button>
+              </div>
+              <div class="item-total">$${itemTotal.toFixed(2)}</div>
+              <div>
+                <button class="remove-btn" onclick="removeItem('${item._id}')">Remove</button>
+              </div>
+            </div>
+          `;
+        });
+        
+        const shipping = subtotal > 100 ? 0 : 10;
+        const total = subtotal + shipping;
+        
+        itemsHtml += `
+            </div>
+            <div class="order-summary">
+              <h2>Order Summary</h2>
+              <div class="summary-row">
+                <span>Subtotal</span>
+                <span>$${subtotal.toFixed(2)}</span>
+              </div>
+              <div class="summary-row">
+                <span>Shipping</span>
+                <span>${shipping === 0 ? 'FREE' : '$' + shipping.toFixed(2)}</span>
+              </div>
+              ${shipping === 0 ? '<div class="free-shipping">🎉 Free Shipping on orders over $100!</div>' : ''}
+              <div class="summary-row total">
+                <span>Total</span>
+                <span class="amount">$${total.toFixed(2)}</span>
+              </div>
+              <button class="checkout-btn" onclick="checkout()">Proceed to Checkout →</button>
+            </div>
+          </div>
+        `;
+        
+        document.getElementById('cartContent').innerHTML = itemsHtml;
+      } catch (error) {
+        console.error('Error loading cart:', error);
+        document.getElementById('cartContent').innerHTML = '<div class="empty-cart">Error loading cart</div>';
+      }
+    }
+    
+    async function updateQuantity(itemId, newQuantity) {
+      if (newQuantity < 1) return;
+      
+      const token = localStorage.getItem('token');
+      try {
+        await fetch(`/api/cart/update/${itemId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ quantity: newQuantity })
+        });
+        loadCart();
+      } catch (error) {
+        console.error('Error updating quantity:', error);
+      }
+    }
+    
+    async function removeItem(itemId) {
+      if (!confirm('Remove this item from cart?')) return;
+      
+      const token = localStorage.getItem('token');
+      try {
+        await fetch(`/api/cart/remove/${itemId}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        loadCart();
+      } catch (error) {
+        console.error('Error removing item:', error);
+      }
+    }
+    
+    function checkout() {
+      window.location.href = '/checkout';
+    }
+    
+    loadCart();
+  </script>
+</body>
+</html>

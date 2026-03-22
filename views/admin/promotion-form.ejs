@@ -1,0 +1,56 @@
+<%- include('partials/header', { title: promotion ? 'Edit Promotion' : 'Add Promotion', currentPage: 'promotions' }) %>
+
+<div class="page-header">
+  <a href="/admin/promotions" class="btn-back">← Back to Promotions</a>
+  <h1 style="margin-top: 1rem;"><%= promotion ? 'Edit Promotion' : 'Add New Promotion' %></h1>
+  <p><%= promotion ? 'Update promotion details' : 'Create a new special offer' %></p>
+</div>
+
+<div class="section">
+  <form action="/admin/promotions<%= promotion ? '/' + promotion._id : '' %>" method="POST">
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;">
+      <div style="grid-column: span 2;">
+        <label style="display: block; margin-bottom: 0.5rem; color: rgba(255,255,255,0.7);">Promotion Title *</label>
+        <input type="text" name="title" value="<%= promotion ? promotion.title : '' %>" required style="width: 100%; padding: 12px; background: #0a0a0a; border: 1px solid #333; border-radius: 10px; color: white;">
+      </div>
+      
+      <div style="grid-column: span 2;">
+        <label style="display: block; margin-bottom: 0.5rem; color: rgba(255,255,255,0.7);">Description</label>
+        <textarea name="description" rows="3" style="width: 100%; padding: 12px; background: #0a0a0a; border: 1px solid #333; border-radius: 10px; color: white;"><%= promotion ? promotion.description : '' %></textarea>
+      </div>
+      
+      <div>
+        <label style="display: block; margin-bottom: 0.5rem; color: rgba(255,255,255,0.7);">Discount Percentage *</label>
+        <input type="number" name="discountPercentage" value="<%= promotion ? promotion.discountPercentage : '' %>" min="0" max="100" required style="width: 100%; padding: 12px; background: #0a0a0a; border: 1px solid #333; border-radius: 10px; color: white;">
+      </div>
+      
+      <div>
+        <label style="display: block; margin-bottom: 0.5rem; color: rgba(255,255,255,0.7);">Status</label>
+        <select name="isActive" style="width: 100%; padding: 12px; background: #0a0a0a; border: 1px solid #333; border-radius: 10px; color: white;">
+          <option value="on" <%= promotion && promotion.isActive ? 'selected' : '' %>>Active</option>
+          <option value="off" <%= promotion && !promotion.isActive ? 'selected' : '' %>>Inactive</option>
+        </select>
+      </div>
+      
+      <div>
+        <label style="display: block; margin-bottom: 0.5rem; color: rgba(255,255,255,0.7);">Start Date *</label>
+        <input type="date" name="startDate" value="<%= promotion ? new Date(promotion.startDate).toISOString().split('T')[0] : '' %>" required style="width: 100%; padding: 12px; background: #0a0a0a; border: 1px solid #333; border-radius: 10px; color: white;">
+      </div>
+      
+      <div>
+        <label style="display: block; margin-bottom: 0.5rem; color: rgba(255,255,255,0.7);">End Date *</label>
+        <input type="date" name="endDate" value="<%= promotion ? new Date(promotion.endDate).toISOString().split('T')[0] : '' %>" required style="width: 100%; padding: 12px; background: #0a0a0a; border: 1px solid #333; border-radius: 10px; color: white;">
+      </div>
+    </div>
+    
+    <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+      <button type="submit" class="btn-update"><%= promotion ? 'Update Promotion' : 'Create Promotion' %></button>
+      <a href="/admin/promotions" class="btn-back" style="background: #333; text-decoration: none;">Cancel</a>
+    </div>
+  </form>
+</div>
+
+</main>
+</div>
+</body>
+</html>

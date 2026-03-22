@@ -1,0 +1,169 @@
+<%- include('partials/header', { title: 'Users', currentPage: 'users' }) %>
+
+<div class="page-header" style="display: flex; justify-content: space-between; align-items: center;">
+  <div>
+    <h1>User Management</h1>
+    <p>View and manage all registered users</p>
+  </div>
+  <div class="stats-info">
+    <span style="background: rgba(102,126,234,0.2); padding: 8px 16px; border-radius: 20px;">
+      Total Users: <strong><%= users ? users.length : 0 %></strong>
+    </span>
+  </div>
+</div>
+
+<div class="data-table">
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Joined</th>
+        <th>Orders</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (users && users.length > 0) { %>
+        <% users.forEach(user => { %>
+          <tr>
+            <td>
+              <strong><%= user.name %></strong>
+              <% if (user.role === 'admin') { %>
+                <span style="margin-left: 8px; font-size: 10px; background: #e74c3c; padding: 2px 6px; border-radius: 10px;">Admin</span>
+              <% } %>
+            </td>
+            <td><%= user.email %></td>
+            <td>
+              <select class="role-select" data-user-id="<%= user._id %>" data-current-role="<%= user.role %>" style="padding: 5px 10px; background: #0a0a0a; border: 1px solid #667eea; border-radius: 8px; color: white; cursor: pointer;">
+                <option value="user" <%= user.role === 'user' ? 'selected' : '' %>>User</option>
+                <option value="admin" <%= user.role === 'admin' ? 'selected' : '' %>>Admin</option>
+              </select>
+            </td>
+            <td><%= new Date(user.createdAt).toLocaleDateString() %></td>
+            <td><span style="background: rgba(102,126,234,0.2); padding: 4px 8px; border-radius: 12px;"><%= user.registeredEvents ? user.registeredEvents.length : 0 %></span></td>
+            <td>
+              <a href="/admin/users/<%= user._id %>" class="btn-view" style="margin-right: 5px;">👁️ View</a>
+              <button onclick="deleteUser('<%= user._id %>', '<%= user.name %>')" class="btn-delete">🗑️ Delete</button>
+            </td>
+          </tr>
+        <% }) %>
+      <% } else { %>
+        <tr>
+          <td colspan="6" style="text-align: center; padding: 3rem;">
+            <p>No users found</p>
+            <a href="/admin/dashboard" style="color: #667eea;">Go to Dashboard</a>
+          </td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+
+<style>
+  .btn-delete {
+    background: rgba(231, 76, 60, 0.2);
+    padding: 5px 12px;
+    border-radius: 8px;
+    color: #e74c3c;
+    border: none;
+    cursor: pointer;
+    font-size: 0.75rem;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-delete:hover {
+    background: rgba(231, 76, 60, 0.4);
+    transform: translateY(-2px);
+  }
+  
+  .role-select {
+    transition: all 0.3s ease;
+  }
+  
+  .role-select:hover {
+    border-color: #fff;
+  }
+</style>
+
+<script>
+  // Update user role
+  document.querySelectorAll('.role-select').forEach(select => {
+    select.addEventListener('change', async function() {
+      const userId = this.dataset.userId;
+      const newRole = this.value;
+      const currentRole = this.dataset.currentRole;
+      
+      if (newRole === currentRole) return;
+      
+      if (!confirm(`Are you sure you want to change this user's role to ${newRole.toUpperCase()}?`)) {
+        this.value = currentRole;
+        return;
+      }
+      
+      const token = localStorage.getItem('token');
+      
+      try {
+        const response = await fetch(`/admin/users/${userId}/role`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ role: newRole })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          alert(`User role updated to ${newRole.toUpperCase()} successfully!`);
+          this.dataset.currentRole = newRole;
+          window.location.reload();
+        } else {
+          alert(data.message || 'Failed to update role');
+          this.value = currentRole;
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Error updating user role');
+        this.value = currentRole;
+      }
+    });
+  });
+  
+  // Delete user function
+  async function deleteUser(userId, userName) {
+    if (!confirm(`⚠️ WARNING: This will permanently delete user "${userName}" and ALL their orders. This action cannot be undone. Are you ABSOLUTELY sure?`)) {
+      return;
+    }
+    
+    const token = localStorage.getItem('token');
+    
+    try {
+      const response = await fetch(`/admin/users/${userId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        alert(`User "${userName}" deleted successfully`);
+        window.location.reload();
+      } else {
+        alert(data.message || 'Failed to delete user');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Error deleting user');
+    }
+  }
+</script>
+
+</main>
+</div>
+</body>
+</html>

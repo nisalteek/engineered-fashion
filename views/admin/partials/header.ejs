@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> | ENGINEERED FASHION Admin</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0a0a0a;
+      color: white;
+    }
+
+    /* Admin Container */
+    .admin-container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 280px;
+      background: linear-gradient(180deg, #0f0f1a 0%, #0a0a0f 100%);
+      border-right: 1px solid rgba(102, 126, 234, 0.2);
+      position: fixed;
+      height: 100vh;
+      overflow-y: auto;
+      backdrop-filter: blur(10px);
+    }
+
+    .sidebar-header {
+      padding: 2rem 1.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 1.5rem;
+    }
+
+    .sidebar-header h2 {
+      font-size: 1.25rem;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.25rem;
+    }
+
+    .sidebar-header p {
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .sidebar-menu {
+      list-style: none;
+      padding: 0;
+    }
+
+    .sidebar-menu li {
+      margin-bottom: 0.5rem;
+    }
+
+    .sidebar-menu a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 24px;
+      color: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      border-left: 3px solid transparent;
+    }
+
+    .sidebar-menu a:hover {
+      background: rgba(102, 126, 234, 0.1);
+      color: white;
+      border-left-color: #667eea;
+    }
+
+    .sidebar-menu a.active {
+      background: rgba(102, 126, 234, 0.15);
+      color: white;
+      border-left-color: #667eea;
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      margin-left: 280px;
+      padding: 2rem;
+    }
+
+    /* Welcome Banner */
+    .welcome-banner {
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2));
+      border-radius: 24px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      border: 1px solid rgba(102, 126, 234, 0.3);
+      backdrop-filter: blur(10px);
+    }
+
+    .welcome-banner h1 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .welcome-banner p {
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: rgba(15, 15, 26, 0.8);
+      border-radius: 20px;
+      padding: 1.5rem;
+      border: 1px solid rgba(102, 126, 234, 0.2);
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(102, 126, 234, 0.5);
+      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.1);
+    }
+
+    .stat-card h3 {
+      font-size: 0.875rem;
+      color: rgba(255, 255, 255, 0.6);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: bold;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 0.5rem 0;
+    }
+
+    .stat-link {
+      display: inline-block;
+      margin-top: 1rem;
+      color: #667eea;
+      text-decoration: none;
+      font-size: 0.875rem;
+    }
+
+    /* Tables */
+    .data-table {
+      background: rgba(15, 15, 26, 0.8);
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid rgba(102, 126, 234, 0.2);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    th {
+      color: rgba(255, 255, 255, 0.6);
+      font-weight: 500;
+      font-size: 0.875rem;
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    td {
+      color: white;
+    }
+
+    tr:hover {
+      background: rgba(102, 126, 234, 0.05);
+    }
+
+    /* Status Badges */
+    .status-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: bold;
+    }
+
+    .status-pending { background: #f39c12; color: #000; }
+    .status-processing { background: #3498db; color: #fff; }
+    .status-shipped { background: #9b59b6; color: #fff; }
+    .status-delivered { background: #27ae60; color: #fff; }
+    .status-cancelled { background: #e74c3c; color: #fff; }
+
+    /* Role Badges */
+    .role-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: bold;
+    }
+
+    .role-user { background: #3498db; color: #fff; }
+    .role-admin { background: #e74c3c; color: #fff; }
+
+    /* Buttons */
+    .btn-view, .btn-edit {
+      background: rgba(102, 126, 234, 0.2);
+      padding: 0.25rem 0.75rem;
+      border-radius: 8px;
+      color: #667eea;
+      text-decoration: none;
+      font-size: 0.75rem;
+      transition: all 0.3s ease;
+      display: inline-block;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-view:hover, .btn-edit:hover {
+      background: rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-back {
+      background: #333;
+      color: white;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-bottom: 1rem;
+      display: inline-block;
+      text-decoration: none;
+    }
+
+    .btn-back:hover {
+      background: #444;
+    }
+
+    .btn-update {
+      background: #667eea;
+      color: white;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .btn-update:hover {
+      opacity: 0.9;
+    }
+
+    /* Page Header */
+    .page-header {
+      margin-bottom: 2rem;
+    }
+
+    .page-header h1 {
+      font-size: 1.8rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .page-header p {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    /* Sections */
+    .section {
+      background: rgba(15, 15, 26, 0.8);
+      border-radius: 20px;
+      padding: 1.5rem;
+      border: 1px solid rgba(102, 126, 234, 0.2);
+      margin-bottom: 1.5rem;
+    }
+
+    .section h2 {
+      font-size: 1.25rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid rgba(102, 126, 234, 0.2);
+    }
+
+    .section h3 {
+      color: #667eea;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+    }
+
+    .info-box {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 1rem;
+      border-radius: 12px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        z-index: 1000;
+      }
+      
+      .sidebar.active {
+        transform: translateX(0);
+      }
+      
+      .main-content {
+        margin-left: 0;
+      }
+      
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      table {
+        display: block;
+        overflow-x: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h2>ENGINEERED FASHION</h2>
+        <p>Admin Control Panel</p>
+      </div>
+      
+      <ul class="sidebar-menu">
+        <li><a href="/admin/dashboard" class="<%= currentPage === 'dashboard' ? 'active' : '' %>">📊 Dashboard</a></li>
+        <li><a href="/admin/orders" class="<%= currentPage === 'orders' ? 'active' : '' %>">📦 Orders</a></li>
+        <li><a href="/admin/users" class="<%= currentPage === 'users' ? 'active' : '' %>">👥 Users</a></li>
+        <li><a href="/admin/products" class="<%= currentPage === 'products' ? 'active' : '' %>">👕 Products</a></li>
+        <li><a href="/admin/promotions" class="<%= currentPage === 'promotions' ? 'active' : '' %>">🎯 Promotions</a></li>
+        <li><a href="/admin/logout">🚪 Logout</a></li>
+      </ul>
+    </aside>
+
+    <main class="main-content">

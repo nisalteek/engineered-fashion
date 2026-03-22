@@ -1,0 +1,131 @@
+<%- include('partials/header', { title: 'Dashboard', currentPage: 'dashboard' }) %>
+
+<div class="welcome-banner">
+  <h1>Welcome, <%= adminUsername %>!</h1>
+  <p>Smart clothing powered by innovation — Manage your engineered fashion empire</p>
+</div>
+
+<div class="stats-grid">
+  <div class="stat-card">
+    <h3>Total Orders</h3>
+    <div class="stat-number"><%= stats.totalOrders || 0 %></div>
+    <a href="/admin/orders" class="stat-link">View All Orders →</a>
+  </div>
+  
+  <div class="stat-card">
+    <h3>Total Users</h3>
+    <div class="stat-number"><%= stats.totalUsers || 0 %></div>
+    <a href="/admin/users" class="stat-link">Manage Users →</a>
+  </div>
+  
+  <div class="stat-card">
+    <h3>Total Products</h3>
+    <div class="stat-number"><%= stats.totalProducts || 0 %></div>
+    <a href="/admin/products" class="stat-link">Manage Products →</a>
+  </div>
+  
+  <div class="stat-card">
+    <h3>Pending Orders</h3>
+    <div class="stat-number"><%= stats.pendingOrders || 0 %></div>
+    <a href="/admin/orders" class="stat-link">View Pending →</a>
+  </div>
+</div>
+
+<div class="section">
+  <h2>📦 Recent Orders</h2>
+  <div class="data-table">
+    <table>
+      <thead>
+        <tr>
+          <th>Order ID</th>
+          <th>Customer</th>
+          <th>Date</th>
+          <th>Total</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (recentOrders && recentOrders.length > 0) { %>
+          <% recentOrders.forEach(order => { %>
+            <tr>
+              <td>#<%= order._id.toString().slice(-8) %></td>
+              <td><%= order.user ? order.user.name : 'N/A' %></td>
+              <td><%= new Date(order.createdAt).toLocaleDateString() %></td>
+              <td>$<%= order.totalPrice.toFixed(2) %></td>
+              <td><span class="status-badge status-<%= order.status %>"><%= order.status.toUpperCase() %></span></td>
+              <td><a href="/admin/orders/<%= order._id %>" class="btn-view">View</a></td>
+            </tr>
+          <% }) %>
+        <% } else { %>
+          <tr><td colspan="6" style="text-align: center;">No orders yet</td></tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="section">
+  <h2>👥 Recent Users</h2>
+  <div class="data-table">
+     <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Joined</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (recentUsers && recentUsers.length > 0) { %>
+          <% recentUsers.forEach(user => { %>
+            <tr>
+              <td><%= user.name %></td>
+              <td><%= user.email %></td>
+              <td><span class="role-badge role-<%= user.role %>"><%= user.role.toUpperCase() %></span></td>
+              <td><%= new Date(user.createdAt).toLocaleDateString() %></td>
+              <td><a href="/admin/users/<%= user._id %>" class="btn-view">View</a></td>
+            </tr>
+          <% }) %>
+        <% } else { %>
+          <tr><td colspan="5" style="text-align: center;">No users yet</td></tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="section">
+  <h2>👕 Recently Added Products</h2>
+  <div class="data-table">
+    <table>
+      <thead>
+        <tr>
+          <th>Product Name</th>
+          <th>Price</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (recentProducts && recentProducts.length > 0) { %>
+          <% recentProducts.forEach(product => { %>
+            <tr>
+              <td><%= product.name %></td>
+              <td>$<%= product.price %></td>
+              <td><a href="/admin/products/<%= product._id %>/edit" class="btn-edit">Edit</a></td>
+            </tr>
+          <% }) %>
+        <% } else { %>
+          <tr><td colspan="3" style="text-align: center;">No products yet</td></tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</main>
+</div>
+</body>
+</html>
