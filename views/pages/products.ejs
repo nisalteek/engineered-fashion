@@ -233,7 +233,7 @@
         <p>Login to add items to your cart</p>
         <input type="email" id="modalEmail" placeholder="Email Address" required>
         <input type="password" id="modalPassword" placeholder="Password" required>
-        <button onclick="modalLogin()" class="modal-btn">Login & Add to Cart</button>
+        <button onclick="modalLogin()" class="modal-btn">Login & Continue</button>
       </div>
       
       <!-- Register Form -->
@@ -243,7 +243,7 @@
         <input type="text" id="modalName" placeholder="Full Name" required>
         <input type="email" id="modalRegEmail" placeholder="Email Address" required>
         <input type="password" id="modalRegPassword" placeholder="Password" required>
-        <button onclick="modalRegister()" class="modal-btn">Register & Add to Cart</button>
+        <button onclick="modalRegister()" class="modal-btn">Register & Continue</button>
       </div>
     </div>
   </div>
@@ -402,27 +402,8 @@
         return;
       }
       
-      try {
-        const response = await fetch('/api/cart/add', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify({ productId, quantity: 1 })
-        });
-        
-        const data = await response.json();
-        
-        if (data.success) {
-          showToast('✓ Added to cart!');
-        } else {
-          showToast('✗ ' + (data.message || 'Failed to add'));
-        }
-      } catch (error) {
-        console.error('Error:', error);
-        showToast('✗ Error adding to cart');
-      }
+      // If logged in, go to product details page to select size/color
+      window.location.href = `/products/${productId}`;
     }
     
     function showLoginModal() {
@@ -481,24 +462,12 @@
             body: JSON.stringify({ user: data.user })
           });
           
-          // Add to cart after login
+          // AFTER LOGIN - Redirect to product details page
           if (pendingProductId) {
-            const cartResponse = await fetch('/api/cart/add', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${data.token}`
-              },
-              body: JSON.stringify({ productId: pendingProductId, quantity: 1 })
-            });
-            
-            if (cartResponse.ok) {
-              showToast('✓ Added to cart!');
-              closeModal();
-              setTimeout(() => {
-                window.location.href = '/cart';
-              }, 1000);
-            }
+            closeModal();
+            window.location.href = `/products/${pendingProductId}`;
+          } else {
+            window.location.href = '/';
           }
         } else {
           alert(data.message || 'Login failed');
@@ -543,24 +512,12 @@
             body: JSON.stringify({ user: data.user })
           });
           
-          // Add to cart after registration
+          // AFTER REGISTER - Redirect to product details page
           if (pendingProductId) {
-            const cartResponse = await fetch('/api/cart/add', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${data.token}`
-              },
-              body: JSON.stringify({ productId: pendingProductId, quantity: 1 })
-            });
-            
-            if (cartResponse.ok) {
-              showToast('✓ Registered and added to cart!');
-              closeModal();
-              setTimeout(() => {
-                window.location.href = '/cart';
-              }, 1000);
-            }
+            closeModal();
+            window.location.href = `/products/${pendingProductId}`;
+          } else {
+            window.location.href = '/';
           }
         } else {
           alert(data.message || 'Registration failed');
