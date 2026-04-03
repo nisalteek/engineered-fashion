@@ -288,7 +288,120 @@ body {
 #userInput:focus {
   outline: none;
 }
+/* Filter Section */
+.filter-section {
+  padding: 2rem 5%;
+  background: #0a0a0a;
+  border-bottom: 1px solid rgba(102,126,234,0.2);
+}
 
+.filter-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.search-box {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 1.5rem;
+}
+
+.search-box input {
+  flex: 1;
+  padding: 12px 20px;
+  background: #1a1a2e;
+  border: 1px solid rgba(102,126,234,0.3);
+  border-radius: 30px;
+  color: white;
+  font-size: 1rem;
+}
+
+.search-box input:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.search-box button {
+  padding: 12px 30px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border: none;
+  border-radius: 30px;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.search-box button:hover {
+  transform: translateY(-2px);
+}
+
+.filter-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+}
+
+.filter-options select {
+  padding: 10px 20px;
+  background: #1a1a2e;
+  border: 1px solid rgba(102,126,234,0.3);
+  border-radius: 30px;
+  color: white;
+  cursor: pointer;
+}
+
+.filter-options select:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.price-range {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #1a1a2e;
+  padding: 5px 15px;
+  border-radius: 30px;
+}
+
+.price-range input {
+  width: 150px;
+  cursor: pointer;
+}
+
+.clear-btn {
+  padding: 8px 20px;
+  background: transparent;
+  border: 1px solid #e74c3c;
+  border-radius: 30px;
+  color: #e74c3c;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.clear-btn:hover {
+  background: #e74c3c;
+  color: white;
+}
+
+.results-count {
+  text-align: center;
+  margin: 1rem 0;
+  color: #888;
+}
+
+@media (max-width: 768px) {
+  .filter-options {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .price-range {
+    justify-content: center;
+  }
+}
 /* SEARCH SECTION */
 .search-section {
   padding: 40px 5%;
