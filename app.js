@@ -48,12 +48,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 const authRoutes = require('./routes/authRoutes');
 const cartRoutes = require('./routes/cartRoutes');
 const orderRoutes = require('./routes/orderRoutes');
-const promoRoutes = require('./routes/promoRoutes');  // ADD THIS LINE
+const promoRoutes = require('./routes/promoRoutes');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/orders', orderRoutes);
-app.use('/api/promo', promoRoutes);  // ADD THIS LINE
+app.use('/api/promo', promoRoutes);
 
 // ============ ADMIN ROUTES ============
 app.use('/admin', require('./routes/adminRoutes'));
@@ -80,6 +80,7 @@ app.get('/', async (req, res) => {
   }
 });
 
+// Products listing page
 app.get('/products', async (req, res) => {
   try {
     const products = await Product.find();
@@ -87,6 +88,25 @@ app.get('/products', async (req, res) => {
   } catch (error) {
     console.log(error);
     res.render('pages/products', { products: [], user: null });
+  }
+});
+
+// ============ PRODUCT DETAILS ROUTE ============
+app.get('/products/:id', async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    
+    if (!product) {
+      return res.redirect('/products');
+    }
+    
+    res.render('pages/product-details', { 
+      product: product,
+      user: req.session.user || null 
+    });
+  } catch (error) {
+    console.error('Product details error:', error);
+    res.redirect('/products');
   }
 });
 

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= product.name %> | ENGINEERED FASHION</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .product-details {
+      max-width: 1200px;
+      margin: 4rem auto;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+    }
+    
+    .product-image img {
+      width: 100%;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+    
+    .product-info h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: white;
+    }
+    
+    .product-price {
+      font-size: 1.8rem;
+      color: #667eea;
+      font-weight: bold;
+      margin: 1rem 0;
+    }
+    
+    .product-description {
+      color: #888;
+      line-height: 1.6;
+      margin: 1rem 0;
+    }
+    
+    .btn-add-to-cart {
+      width: 100%;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      padding: 15px;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 1rem;
+      transition: all 0.3s;
+    }
+    
+    .btn-add-to-cart:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102,126,234,0.4);
+    }
+    
+    .back-btn {
+      display: inline-block;
+      margin-bottom: 1rem;
+      color: #667eea;
+      text-decoration: none;
+    }
+    
+    @media (max-width: 768px) {
+      .product-details {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+  
+  <div class="product-details">
+    <div class="product-image">
+      <img src="<%= product.image || '/images/default.jpg' %>" alt="<%= product.name %>">
+    </div>
+    
+    <div class="product-info">
+      <a href="/products" class="back-btn">← Back to Products</a>
+      <h1><%= product.name %></h1>
+      <div class="product-price">$<%= product.price %></div>
+      <div class="product-description">
+        <%= product.description || 'Smart clothing powered by innovation. Experience the future of fashion with our engineered collection.' %>
+      </div>
+      <button class="btn-add-to-cart" onclick="addToCart('<%= product._id %>')">Add to Cart →</button>
+    </div>
+  </div>
+  
+  <script>
+    async function addToCart(productId) {
+      const token = localStorage.getItem('token');
+      
+      if (!token) {
+        if (confirm('Please login to add items to cart. Go to login page?')) {
+          window.location.href = '/login';
+        }
+        return;
+      }
+      
+      try {
+        const response = await fetch('/api/cart/add', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ productId, quantity: 1 })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          alert('Added to cart!');
+          window.location.href = '/cart';
+        } else {
+          alert(data.message || 'Failed to add to cart');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Error adding to cart');
+      }
+    }
+  </script>
+</body>
+</html>
