@@ -16,105 +16,6 @@
       color: white;
     }
 
-    /* Filter Section */
-    .filter-section {
-      padding: 2rem 5%;
-      background: #0a0a0a;
-      border-bottom: 1px solid rgba(102,126,234,0.2);
-    }
-
-    .filter-container {
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-
-    .search-box {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 1.5rem;
-    }
-
-    .search-box input {
-      flex: 1;
-      padding: 12px 20px;
-      background: #1a1a2e;
-      border: 1px solid rgba(102,126,234,0.3);
-      border-radius: 30px;
-      color: white;
-      font-size: 1rem;
-    }
-
-    .search-box input:focus {
-      outline: none;
-      border-color: #667eea;
-    }
-
-    .search-box button {
-      padding: 12px 30px;
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      border: none;
-      border-radius: 30px;
-      color: white;
-      cursor: pointer;
-      font-weight: 600;
-      transition: all 0.3s;
-    }
-
-    .search-box button:hover {
-      transform: translateY(-2px);
-    }
-
-    .filter-options {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      align-items: center;
-    }
-
-    .filter-options select {
-      padding: 10px 20px;
-      background: #1a1a2e;
-      border: 1px solid rgba(102,126,234,0.3);
-      border-radius: 30px;
-      color: white;
-      cursor: pointer;
-    }
-
-    .price-range {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: #1a1a2e;
-      padding: 5px 15px;
-      border-radius: 30px;
-    }
-
-    .price-range input {
-      width: 150px;
-      cursor: pointer;
-    }
-
-    .clear-btn {
-      padding: 8px 20px;
-      background: transparent;
-      border: 1px solid #e74c3c;
-      border-radius: 30px;
-      color: #e74c3c;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-
-    .clear-btn:hover {
-      background: #e74c3c;
-      color: white;
-    }
-
-    .results-count {
-      text-align: center;
-      margin: 1rem 0;
-      color: #888;
-    }
-
     .products {
       max-width: 1400px;
       margin: 0 auto;
@@ -129,6 +30,7 @@
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
+      color: transparent;
       font-weight: bold;
     }
 
@@ -144,6 +46,8 @@
       overflow: hidden;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
       border: 1px solid rgba(102, 126, 234, 0.2);
+      opacity: 0;
+      animation: fadeInUp 0.6s ease-out forwards;
     }
 
     .product-card:hover {
@@ -153,6 +57,7 @@
     }
 
     .product-image-container {
+      position: relative;
       width: 100%;
       height: 300px;
       overflow: hidden;
@@ -195,6 +100,7 @@
       font-size: 1.5rem;
       font-weight: bold;
       color: #667eea;
+      margin: 0;
     }
 
     .product-description {
@@ -220,7 +126,7 @@
 
     .btn-add:hover {
       transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(102,126,234,0.4);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
     }
 
     .toast {
@@ -236,12 +142,15 @@
       animation: slideIn 0.3s ease;
     }
 
-    .no-products {
-      text-align: center;
-      padding: 4rem;
-      background: #111111;
-      border-radius: 20px;
-      color: #888;
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     @keyframes slideIn {
@@ -268,9 +177,11 @@
       .product-image-container {
         height: 250px;
       }
-      .filter-options {
-        flex-direction: column;
-        align-items: stretch;
+      .toast {
+        bottom: 20px;
+        right: 20px;
+        left: 20px;
+        text-align: center;
       }
     }
   </style>
@@ -279,41 +190,13 @@
 <body>
   <%- include('../partials/navbar') %>
  
-  <!-- Search and Filter Section -->
-  <section class="filter-section">
-    <div class="filter-container">
-      <div class="search-box">
-        <input type="text" id="searchInput" placeholder="Search products..." onkeyup="filterProducts()">
-        <button onclick="filterProducts()">🔍 Search</button>
-      </div>
-      
-      <div class="filter-options">
-        <select id="sortSelect" onchange="filterProducts()">
-          <option value="default">Sort by: Default</option>
-          <option value="price_asc">Price: Low to High</option>
-          <option value="price_desc">Price: High to Low</option>
-          <option value="name_asc">Name: A to Z</option>
-          <option value="name_desc">Name: Z to A</option>
-        </select>
-        
-        <div class="price-range">
-          <span>Price: </span>
-          <input type="range" id="priceRange" min="0" max="500" value="500" oninput="updatePriceValue()">
-          <span id="priceValue">Up to $500</span>
-        </div>
-        
-        <button onclick="clearFilters()" class="clear-btn">Clear Filters</button>
-      </div>
-    </div>
-  </section>
-
   <section class="products">
     <h2>⚡ ENGINEERED COLLECTION</h2>
-    <div id="resultsCount" class="results-count"></div>
-    <div class="product-grid" id="productGrid">
+
+    <div class="product-grid">
       <% if (products && products.length > 0) { %>
-        <% products.forEach(function(product) { %>
-          <div class="product-card">
+        <% products.forEach(function(product, index) { %>
+         <div class="product-card" style="animation-delay: <%= index * 0.1 %>s">
             <div class="product-image-container">
               <img src="<%= product.image %>" alt="<%= product.name %>" onerror="this.src='/images/placeholder.jpg'">
             </div>
@@ -344,6 +227,7 @@
         <button class="tab-btn" onclick="switchTab('register')">Register</button>
       </div>
       
+      <!-- Login Form -->
       <div id="loginForm" class="modal-form active">
         <h3>Welcome Back</h3>
         <p>Login to add items to your cart</p>
@@ -352,6 +236,7 @@
         <button onclick="modalLogin()" class="modal-btn">Login & Continue</button>
       </div>
       
+      <!-- Register Form -->
       <div id="registerForm" class="modal-form">
         <h3>Create Account</h3>
         <p>Sign up to start shopping</p>
@@ -497,81 +382,8 @@
   </style>
 
   <script>
-    // Store products for filtering
-    let allProducts = <%= JSON.stringify(products) %>;
-    let currentProducts = [...allProducts];
-    
-    function filterProducts() {
-      const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-      const sortBy = document.getElementById('sortSelect').value;
-      const maxPrice = parseInt(document.getElementById('priceRange').value);
-      
-      // Filter
-      let filtered = allProducts.filter(product => {
-        const matchesSearch = product.name.toLowerCase().includes(searchTerm) ||
-                             (product.description && product.description.toLowerCase().includes(searchTerm));
-        const matchesPrice = product.price <= maxPrice;
-        return matchesSearch && matchesPrice;
-      });
-      
-      // Sort
-      if (sortBy === 'price_asc') {
-        filtered.sort((a, b) => a.price - b.price);
-      } else if (sortBy === 'price_desc') {
-        filtered.sort((a, b) => b.price - a.price);
-      } else if (sortBy === 'name_asc') {
-        filtered.sort((a, b) => a.name.localeCompare(b.name));
-      } else if (sortBy === 'name_desc') {
-        filtered.sort((a, b) => b.name.localeCompare(a.name));
-      }
-      
-      currentProducts = filtered;
-      document.getElementById('resultsCount').innerHTML = `Found ${currentProducts.length} product${currentProducts.length !== 1 ? 's' : ''}`;
-      renderProducts();
-    }
-    
-    function renderProducts() {
-      const container = document.getElementById('productGrid');
-      
-      if (currentProducts.length === 0) {
-        container.innerHTML = '<div class="no-products"><p>✨ No products found. Try different filters!</p></div>';
-        return;
-      }
-      
-      let html = '';
-      currentProducts.forEach(product => {
-        html += `
-          <div class="product-card">
-            <div class="product-image-container">
-              <img src="${product.image || '/images/default.jpg'}" alt="${product.name}" onerror="this.src='/images/placeholder.jpg'">
-            </div>
-            <div class="product-info">
-              <div class="product-name">${product.name}</div>
-              <div class="price-container">
-                <span class="product-price">$${product.price}</span>
-              </div>
-              <div class="product-description">${product.description || 'Smart clothing powered by innovation'}</div>
-              <button class="btn-add" onclick="addToCart('${product._id}')">ADD TO CART →</button>
-            </div>
-          </div>
-        `;
-      });
-      container.innerHTML = html;
-    }
-    
-    function updatePriceValue() {
-      const value = document.getElementById('priceRange').value;
-      document.getElementById('priceValue').innerHTML = `Up to $${value}`;
-      filterProducts();
-    }
-    
-    function clearFilters() {
-      document.getElementById('searchInput').value = '';
-      document.getElementById('sortSelect').value = 'default';
-      document.getElementById('priceRange').value = 500;
-      document.getElementById('priceValue').innerHTML = 'Up to $500';
-      filterProducts();
-    }
+    // Global variable for pending product
+    let pendingProductId = null;
     
     function showToast(message) {
       const toast = document.createElement('div');
@@ -581,15 +393,16 @@
       setTimeout(() => toast.remove(), 3000);
     }
     
-    let pendingProductId = null;
-    
     async function addToCart(productId) {
       const token = localStorage.getItem('token');
+      
       if (!token) {
         pendingProductId = productId;
         showLoginModal();
         return;
       }
+      
+      // If logged in, go to product details page to select size/color
       window.location.href = `/products/${productId}`;
     }
     
@@ -606,7 +419,9 @@
       const loginForm = document.getElementById('loginForm');
       const registerForm = document.getElementById('registerForm');
       const tabs = document.querySelectorAll('.tab-btn');
+      
       tabs.forEach(btn => btn.classList.remove('active'));
+      
       if (tab === 'login') {
         loginForm.classList.add('active');
         registerForm.classList.remove('active');
@@ -621,6 +436,7 @@
     async function modalLogin() {
       const email = document.getElementById('modalEmail').value;
       const password = document.getElementById('modalPassword').value;
+      
       const btn = event.target;
       const originalText = btn.textContent;
       btn.textContent = 'LOGGING IN...';
@@ -632,16 +448,21 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, password })
         });
+        
         const data = await response.json();
         
         if (data.success) {
           localStorage.setItem('token', data.token);
           localStorage.setItem('user', JSON.stringify(data.user));
+          
+          // Set server session
           await fetch('/api/auth/session', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ user: data.user })
           });
+          
+          // AFTER LOGIN - Redirect to product details page
           if (pendingProductId) {
             closeModal();
             window.location.href = `/products/${pendingProductId}`;
@@ -654,6 +475,7 @@
           btn.disabled = false;
         }
       } catch (error) {
+        console.error('Login error:', error);
         alert('Login failed. Please try again.');
         btn.textContent = originalText;
         btn.disabled = false;
@@ -664,6 +486,7 @@
       const name = document.getElementById('modalName').value;
       const email = document.getElementById('modalRegEmail').value;
       const password = document.getElementById('modalRegPassword').value;
+      
       const btn = event.target;
       const originalText = btn.textContent;
       btn.textContent = 'REGISTERING...';
@@ -675,16 +498,21 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ name, email, password })
         });
+        
         const data = await response.json();
         
         if (data.success) {
           localStorage.setItem('token', data.token);
           localStorage.setItem('user', JSON.stringify(data.user));
+          
+          // Set server session
           await fetch('/api/auth/session', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ user: data.user })
           });
+          
+          // AFTER REGISTER - Redirect to product details page
           if (pendingProductId) {
             closeModal();
             window.location.href = `/products/${pendingProductId}`;
@@ -697,21 +525,20 @@
           btn.disabled = false;
         }
       } catch (error) {
+        console.error('Registration error:', error);
         alert('Registration failed. Please try again.');
         btn.textContent = originalText;
         btn.disabled = false;
       }
     }
     
+    // Close modal when clicking outside
     window.onclick = function(event) {
       const modal = document.getElementById('loginModal');
       if (event.target === modal) {
         closeModal();
       }
     }
-    
-    // Initialize
-    document.getElementById('resultsCount').innerHTML = `Found ${allProducts.length} products`;
   </script>
 </body>
 </html>
