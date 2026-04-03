@@ -24,10 +24,10 @@ router.get('/', protect, async (req, res) => {
   }
 });
 
-// Add to cart
+// Add to cart with size and color
 router.post('/add', protect, async (req, res) => {
   try {
-    const { productId, quantity = 1 } = req.body;
+    const { productId, quantity = 1, size = 'M', color = 'Black' } = req.body;
     
     const product = await Product.findById(productId);
     if (!product) {
@@ -40,12 +40,17 @@ router.post('/add', protect, async (req, res) => {
       cart = new Cart({ user: req.user.id, items: [] });
     }
     
-    const existingItem = cart.items.find(item => item.product.toString() === productId);
+    // Check if same product with same size and color exists
+    const existingItem = cart.items.find(item => 
+      item.product.toString() === productId && 
+      item.size === size && 
+      item.color === color
+    );
     
     if (existingItem) {
       existingItem.quantity += quantity;
     } else {
-      cart.items.push({ product: productId, quantity });
+      cart.items.push({ product: productId, quantity, size, color });
     }
     
     await cart.save();

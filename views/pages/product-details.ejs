@@ -38,6 +38,98 @@
       margin: 1rem 0;
     }
     
+    /* Size & Color Selection */
+    .selection-section {
+      margin: 1.5rem 0;
+    }
+    
+    .selection-section h3 {
+      color: #ccc;
+      margin-bottom: 0.8rem;
+      font-size: 1rem;
+    }
+    
+    .size-options, .color-options {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    
+    .size-btn {
+      width: 50px;
+      height: 50px;
+      background: #0a0a0a;
+      border: 1px solid #333;
+      border-radius: 10px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .size-btn:hover, .size-btn.selected {
+      background: #667eea;
+      border-color: #667eea;
+    }
+    
+    .color-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid #333;
+      transition: all 0.3s;
+    }
+    
+    .color-btn:hover, .color-btn.selected {
+      transform: scale(1.1);
+      border-color: white;
+      box-shadow: 0 0 10px rgba(102,126,234,0.5);
+    }
+    
+    .color-Black { background: #000; }
+    .color-White { background: #fff; border: 1px solid #333; }
+    .color-Red { background: #e74c3c; }
+    .color-Blue { background: #3498db; }
+    .color-Green { background: #2ecc71; }
+    .color-Yellow { background: #f1c40f; }
+    .color-Purple { background: #9b59b6; }
+    .color-Gray { background: #7f8c8d; }
+    
+    .quantity-section {
+      margin: 1.5rem 0;
+    }
+    
+    .quantity-selector {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .quantity-btn {
+      width: 40px;
+      height: 40px;
+      background: #0a0a0a;
+      border: 1px solid #333;
+      border-radius: 10px;
+      color: white;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+    
+    .quantity-value {
+      font-size: 1.2rem;
+      font-weight: bold;
+      min-width: 40px;
+      text-align: center;
+    }
+    
+    .stock-info {
+      margin-top: 0.5rem;
+      font-size: 0.8rem;
+      color: #27ae60;
+    }
+    
     .btn-add-to-cart {
       width: 100%;
       background: linear-gradient(135deg, #667eea, #764ba2);
@@ -64,6 +156,16 @@
       text-decoration: none;
     }
     
+    .selected-info {
+      margin-top: 1rem;
+      padding: 10px;
+      background: #1a1a2e;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      color: #888;
+      text-align: center;
+    }
+    
     @media (max-width: 768px) {
       .product-details {
         grid-template-columns: 1fr;
@@ -87,20 +189,138 @@
       <div class="product-description">
         <%= product.description || 'Smart clothing powered by innovation. Experience the future of fashion with our engineered collection.' %>
       </div>
-      <button class="btn-add-to-cart" onclick="addToCart('<%= product._id %>')">Add to Cart →</button>
+      
+      <!-- Size Selection -->
+      <div class="selection-section">
+        <h3>Select Size</h3>
+        <div class="size-options" id="sizeOptions">
+          <% const sizes = product.sizes || ['S', 'M', 'L', 'XL']; %>
+          <% sizes.forEach(size => { %>
+            <button class="size-btn" data-size="<%= size %>" onclick="selectSize('<%= size %>')"><%= size %></button>
+          <% }) %>
+        </div>
+      </div>
+      
+      <!-- Color Selection -->
+      <div class="selection-section">
+        <h3>Select Color</h3>
+        <div class="color-options" id="colorOptions">
+          <% const colors = product.colors || ['Black', 'White']; %>
+          <% colors.forEach(color => { %>
+            <button class="color-btn color-<%= color %>" data-color="<%= color %>" onclick="selectColor('<%= color %>')" title="<%= color %>"></button>
+          <% }) %>
+        </div>
+      </div>
+      
+      <!-- Quantity Selection -->
+      <div class="quantity-section">
+        <h3>Quantity</h3>
+        <div class="quantity-selector">
+          <button class="quantity-btn" onclick="changeQuantity(-1)">-</button>
+          <span class="quantity-value" id="quantity">1</span>
+          <button class="quantity-btn" onclick="changeQuantity(1)">+</button>
+        </div>
+        <div class="stock-info" id="stockInfo">
+          <% if (product.stock && product.stock > 0) { %>
+            ✓ In Stock (<%= product.stock %> available)
+          <% } else { %>
+            ⚠️ Stock information coming soon
+          <% } %>
+        </div>
+      </div>
+      
+      <!-- Selected Info -->
+      <div class="selected-info" id="selectedInfo">
+        Please select size and color
+      </div>
+      
+      <button class="btn-add-to-cart" onclick="addToCartWithOptions()">Add to Cart →</button>
     </div>
   </div>
   
   <script>
-    async function addToCart(productId) {
+    let selectedSize = null;
+    let selectedColor = null;
+    let quantity = 1;
+    const productId = '<%= product._id %>';
+    const productName = '<%= product.name %>';
+    const productPrice = <%= product.price %>;
+    const maxStock = <%= product.stock || 10 %>;
+    
+    function selectSize(size) {
+      selectedSize = size;
+      // Update UI
+      document.querySelectorAll('.size-btn').forEach(btn => {
+        btn.classList.remove('selected');
+      });
+      document.querySelector(`[data-size="${size}"]`).classList.add('selected');
+      updateSelectedInfo();
+    }
+    
+    function selectColor(color) {
+      selectedColor = color;
+      // Update UI
+      document.querySelectorAll('.color-btn').forEach(btn => {
+        btn.classList.remove('selected');
+      });
+      document.querySelector(`[data-color="${color}"]`).classList.add('selected');
+      updateSelectedInfo();
+    }
+    
+    function changeQuantity(delta) {
+      let newQuantity = quantity + delta;
+      if (newQuantity < 1) newQuantity = 1;
+      if (newQuantity > maxStock) newQuantity = maxStock;
+      quantity = newQuantity;
+      document.getElementById('quantity').textContent = quantity;
+      updateSelectedInfo();
+    }
+    
+    function updateSelectedInfo() {
+      const infoDiv = document.getElementById('selectedInfo');
+      if (selectedSize && selectedColor) {
+        infoDiv.innerHTML = `✓ Selected: ${selectedSize} / ${selectedColor} / Qty: ${quantity}`;
+        infoDiv.style.background = 'rgba(39, 174, 96, 0.2)';
+        infoDiv.style.color = '#2ecc71';
+      } else if (selectedSize || selectedColor) {
+        infoDiv.innerHTML = `⚠️ Please select ${!selectedSize ? 'size' : 'color'} first`;
+        infoDiv.style.background = 'rgba(241, 196, 15, 0.2)';
+        infoDiv.style.color = '#f1c40f';
+      } else {
+        infoDiv.innerHTML = 'Please select size and color';
+        infoDiv.style.background = '#1a1a2e';
+        infoDiv.style.color = '#888';
+      }
+    }
+    
+    async function addToCartWithOptions() {
+      if (!selectedSize || !selectedColor) {
+        alert('Please select both size and color before adding to cart');
+        return;
+      }
+      
       const token = localStorage.getItem('token');
       
       if (!token) {
         if (confirm('Please login to add items to cart. Go to login page?')) {
+          // Save product info for after login
+          localStorage.setItem('pendingProduct', JSON.stringify({
+            id: productId,
+            size: selectedSize,
+            color: selectedColor,
+            quantity: quantity
+          }));
           window.location.href = '/login';
         }
         return;
       }
+      
+      const cartItem = {
+        productId: productId,
+        quantity: quantity,
+        size: selectedSize,
+        color: selectedColor
+      };
       
       try {
         const response = await fetch('/api/cart/add', {
@@ -109,13 +329,13 @@
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
           },
-          body: JSON.stringify({ productId, quantity: 1 })
+          body: JSON.stringify(cartItem)
         });
         
         const data = await response.json();
         
         if (data.success) {
-          alert('Added to cart!');
+          alert(`Added to cart!\n${productName}\nSize: ${selectedSize}\nColor: ${selectedColor}\nQuantity: ${quantity}`);
           window.location.href = '/cart';
         } else {
           alert(data.message || 'Failed to add to cart');

@@ -92,6 +92,12 @@
       color: #888;
     }
 
+    .item-variant {
+      font-size: 0.7rem;
+      color: #667eea;
+      margin-top: 4px;
+    }
+
     .item-price {
       font-weight: 600;
       color: #667eea;
@@ -312,6 +318,10 @@
           const itemTotal = item.product.price * item.quantity;
           subtotal += itemTotal;
           
+          // Get size and color with defaults
+          const size = item.size || 'M';
+          const color = item.color || 'Black';
+          
           itemsHtml += `
             <div class="cart-item">
               <div class="item-info">
@@ -319,6 +329,7 @@
                 <div class="item-details">
                   <h3>${item.product.name}</h3>
                   <p>${item.product.description || 'Smart clothing'}</p>
+                  <div class="item-variant">🎨 ${color} | 📏 ${size}</div>
                 </div>
               </div>
               <div class="item-price">$${item.product.price.toFixed(2)}</div>
