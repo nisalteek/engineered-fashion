@@ -3,7 +3,6 @@
 <head>
   <title>Special Offers | ENGINEERED FASHION</title>
   <link rel="stylesheet" href="/css/style.css">
-  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
   <style>
     * {
       margin: 0;
@@ -17,7 +16,7 @@
       color: white;
     }
 
-    /* Hero Section - Professional */
+    /* Hero Section */
     .promo-hero {
       background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 100%);
       padding: 6rem 2rem;
@@ -27,24 +26,9 @@
       border-bottom: 1px solid rgba(102, 126, 234, 0.2);
     }
 
-    .promo-hero::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(102,126,234,0.1)"/><circle cx="80" cy="40" r="3" fill="rgba(118,75,162,0.1)"/><circle cx="50" cy="80" r="2" fill="rgba(102,126,234,0.1)"/></svg>');
-      background-size: 50px 50px;
-      opacity: 0.5;
-      pointer-events: none;
-    }
-
     .promo-hero h1 {
       font-size: 3.5rem;
       margin-bottom: 1rem;
-      position: relative;
-      z-index: 1;
       background: linear-gradient(135deg, #ffffff, #667eea);
       -webkit-background-clip: text;
       background-clip: text;
@@ -55,8 +39,6 @@
     .promo-hero p {
       font-size: 1.2rem;
       opacity: 0.8;
-      position: relative;
-      z-index: 1;
       color: #aaa;
     }
 
@@ -80,22 +62,6 @@
       transition: all 0.4s ease;
       border: 1px solid rgba(102, 126, 234, 0.15);
       position: relative;
-    }
-
-    .promotion-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      transform: scaleX(0);
-      transition: transform 0.4s ease;
-    }
-
-    .promotion-card:hover::before {
-      transform: scaleX(1);
     }
 
     .promotion-card:hover {
@@ -150,7 +116,6 @@
       font-weight: 700;
       margin-bottom: 0.5rem;
       color: white;
-      letter-spacing: -0.3px;
     }
 
     .promotion-description {
@@ -242,17 +207,6 @@
       font-weight: 600;
     }
 
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
     @media (max-width: 768px) {
       .promo-hero {
         padding: 4rem 1.5rem;
@@ -274,26 +228,15 @@
         grid-template-columns: 1fr;
         gap: 1.5rem;
       }
-      
-      .discount-badge {
-        padding: 6px 12px;
-        font-size: 1rem;
-      }
-      
-      .discount-badge .percent {
-        font-size: 1.1rem;
-      }
     }
   </style>
 </head>
-
 <body>
 
-<!-- Navbar -->
 <%- include('../partials/navbar') %>
 
 <!-- Promotions Hero -->
-<section class="promo-hero" data-aos="fade-down">
+<section class="promo-hero">
   <h1>✨ Exclusive Offers</h1>
   <p>Discover limited-time deals on engineered fashion</p>
 </section>
@@ -302,8 +245,8 @@
 <section class="promotions-section">
   <% if (promotions && promotions.length > 0) { %>
     <div class="promotions-grid">
-      <% promotions.forEach((promo, index) => { %>
-        <div class="promotion-card" style="animation: fadeInUp 0.5s ease forwards; animation-delay: <%= index * 0.1 %>s; opacity: 0;">
+      <% promotions.forEach((promo) => { %>
+        <div class="promotion-card">
           <img src="<%= promo.image || '/images/promo-default.jpg' %>" alt="<%= promo.title %>" class="promotion-image" onerror="this.src='/images/promo-default.jpg'">
           <div class="discount-badge">
             <span class="percent"><%= promo.discountPercentage %>%</span>
@@ -327,21 +270,13 @@
       <% }) %>
     </div>
   <% } else { %>
-    <div class="no-promotions" data-aos="fade-up">
+    <div class="no-promotions">
       <h3>✨ Coming Soon</h3>
       <p>Exciting offers are on their way. Stay tuned!</p>
       <a href="/products">Browse Products →</a>
     </div>
   <% } %>
 </section>
-
-<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
-<script>
-  AOS.init({
-    duration: 800,
-    once: true
-  });
-</script>
 
 </body>
 </html>
