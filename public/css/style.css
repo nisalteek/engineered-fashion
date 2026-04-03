@@ -838,3 +838,175 @@ footer {
     font-size: 1.8rem;
   }
 }
+/* ========== PROFESSIONAL PROMOTION BANNER ========== */
+.promo-banner {
+  background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 100%);
+  margin: 60px auto;
+  max-width: 1200px;
+  border-radius: 30px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(102, 126, 234, 0.3);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.promo-banner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(102,126,234,0.08)"/><circle cx="80" cy="40" r="3" fill="rgba(118,75,162,0.08)"/><circle cx="50" cy="80" r="2" fill="rgba(102,126,234,0.08)"/></svg>');
+  background-size: 50px 50px;
+  pointer-events: none;
+}
+
+.promo-banner-content {
+  padding: 3rem;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.promo-tag {
+  display: inline-block;
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  padding: 5px 15px;
+  border-radius: 30px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+}
+
+.promo-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  background: linear-gradient(135deg, #ffffff, #667eea);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.promo-desc {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1rem;
+  margin-bottom: 2rem;
+}
+
+.promo-discount {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.discount-circle {
+  width: 120px;
+  height: 120px;
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 30px rgba(231, 76, 60, 0.3);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 10px 30px rgba(231, 76, 60, 0.3);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 15px 40px rgba(231, 76, 60, 0.5);
+  }
+}
+
+.discount-percent {
+  font-size: 2rem;
+  font-weight: 800;
+  color: white;
+  line-height: 1;
+}
+
+.discount-label {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.9);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.promo-validity {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 2rem;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 30px;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.validity-icon {
+  font-size: 0.9rem;
+}
+
+.validity-text {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.promo-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  text-decoration: none;
+  padding: 12px 30px;
+  border-radius: 40px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+}
+
+.promo-btn:hover {
+  transform: translateY(-3px);
+  gap: 15px;
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.btn-arrow {
+  transition: transform 0.3s ease;
+}
+
+.promo-btn:hover .btn-arrow {
+  transform: translateX(5px);
+}
+
+@media (max-width: 768px) {
+  .promo-banner-content {
+    padding: 2rem;
+  }
+  
+  .promo-title {
+    font-size: 1.5rem;
+  }
+  
+  .discount-circle {
+    width: 90px;
+    height: 90px;
+  }
+  
+  .discount-percent {
+    font-size: 1.5rem;
+  }
+}

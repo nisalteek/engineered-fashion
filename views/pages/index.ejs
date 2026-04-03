@@ -46,24 +46,52 @@
   </div>
 </section>
 
-<!-- 🔹 PROMOTION BANNER -->
-<section class="promo" data-aos="fade-up">
-  <div class="promo-container">
+<!-- 🔹 PROMOTION BANNER - PROFESSIONAL DESIGN -->
+<section class="promo-banner" data-aos="fade-up">
+  <div class="promo-banner-content">
     <% if (typeof promotions !== 'undefined' && promotions && promotions.length > 0) { %>
       <% var bestPromo = promotions[0]; %>
-      <h2><%= bestPromo.title %></h2>
-      <p><%= bestPromo.description || 'Limited time offer on selected items!' %></p>
-      <div class="promo-offer">
-        <span class="discount-badge"><%= bestPromo.discountPercentage %>% OFF</span>
-        <p class="promo-dates">
-          Offer valid until: <%= new Date(bestPromo.endDate).toLocaleDateString() %>
-        </p>
+      <div class="promo-tag">🔥 LIMITED TIME OFFER</div>
+      <h2 class="promo-title"><%= bestPromo.title %></h2>
+      <p class="promo-desc"><%= bestPromo.description || 'Limited time offer on selected items!' %></p>
+      
+      <div class="promo-discount">
+        <div class="discount-circle">
+          <span class="discount-percent"><%= bestPromo.discountPercentage %>%</span>
+          <span class="discount-label">OFF</span>
+        </div>
       </div>
-      <a href="/products" class="btn shop-now">Shop Now →</a>
+      
+      <div class="promo-validity">
+        <span class="validity-icon">⏰</span>
+        <span class="validity-text">Valid until: <%= new Date(bestPromo.endDate).toLocaleDateString() %></span>
+      </div>
+      
+      <a href="/products" class="promo-btn">
+        <span>Shop Now</span>
+        <span class="btn-arrow">→</span>
+      </a>
     <% } else { %>
-      <h2>20% OFF with Bank Cards 💳</h2>
-      <p>Limited time offer on all products</p>
-      <a href="/products" class="btn shop-now">Shop Now →</a>
+      <div class="promo-tag">🎉 SPECIAL OFFER</div>
+      <h2 class="promo-title">20% OFF with Bank Cards 💳</h2>
+      <p class="promo-desc">Limited time offer on all products</p>
+      
+      <div class="promo-discount">
+        <div class="discount-circle">
+          <span class="discount-percent">20%</span>
+          <span class="discount-label">OFF</span>
+        </div>
+      </div>
+      
+      <div class="promo-validity">
+        <span class="validity-icon">⏰</span>
+        <span class="validity-text">Limited time offer - Don't miss out!</span>
+      </div>
+      
+      <a href="/products" class="promo-btn">
+        <span>Shop Now</span>
+        <span class="btn-arrow">→</span>
+      </a>
     <% } %>
   </div>
 </section>
