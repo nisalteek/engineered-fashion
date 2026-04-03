@@ -1,6 +1,6 @@
 const Product = require('../models/Product');
 
-// Show all products (admin view)
+
 const index = async (req, res) => {
   try {
     const products = await Product.find();
@@ -11,12 +11,12 @@ const index = async (req, res) => {
   }
 };
 
-// Show create form
+
 const createForm = (req, res) => {
   res.render('admin/product-form', { product: null, error: null });
 };
 
-// Create product
+
 const create = async (req, res) => {
   try {
     const { name, price, description, image } = req.body;
@@ -29,7 +29,7 @@ const create = async (req, res) => {
   }
 };
 
-// Show edit form
+
 const editForm = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
@@ -39,7 +39,7 @@ const editForm = async (req, res) => {
   }
 };
 
-// Update product - THIS IS THE KEY FUNCTION
+
 const update = async (req, res) => {
   try {
     const { name, price, description, image } = req.body;
@@ -47,7 +47,7 @@ const update = async (req, res) => {
     console.log('🔄 Updating product ID:', req.params.id);
     console.log('   New price: $' + price);
     
-    // Update the product in database
+    
     const updatedProduct = await Product.findByIdAndUpdate(
       req.params.id,
       {
@@ -56,7 +56,7 @@ const update = async (req, res) => {
         description: description,
         image: image
       },
-      { new: true } // Return the updated document
+      { new: true } 
     );
     
     if (updatedProduct) {
@@ -64,7 +64,7 @@ const update = async (req, res) => {
       console.log('   New price: $' + updatedProduct.price);
     }
     
-    // Redirect back to products list
+   
     res.redirect('/admin/products');
   } catch (error) {
     console.log('❌ Update error:', error);
@@ -72,7 +72,7 @@ const update = async (req, res) => {
   }
 };
 
-// Delete product
+
 const deleteProduct = async (req, res) => {
   try {
     await Product.findByIdAndDelete(req.params.id);
