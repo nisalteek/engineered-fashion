@@ -16,33 +16,28 @@
       color: white;
     }
 
-    /* Hero Section */
     .promo-hero {
       background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 100%);
       padding: 6rem 2rem;
       text-align: center;
-      position: relative;
-      overflow: hidden;
       border-bottom: 1px solid rgba(102, 126, 234, 0.2);
     }
 
     .promo-hero h1 {
-      font-size: 3.5rem;
+      font-size: 3rem;
       margin-bottom: 1rem;
       background: linear-gradient(135deg, #ffffff, #667eea);
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
-      letter-spacing: -0.5px;
     }
 
     .promo-hero p {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       opacity: 0.8;
       color: #aaa;
     }
 
-    /* Promotions Section */
     .promotions-section {
       max-width: 1200px;
       margin: 0 auto;
@@ -66,19 +61,18 @@
 
     .promotion-card:hover {
       transform: translateY(-8px);
-      border-color: rgba(102, 126, 234, 0.4);
+      border-color: #667eea;
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
     }
 
     .promotion-image {
       width: 100%;
-      height: 220px;
-      object-fit: cover;
-      transition: transform 0.5s ease;
-    }
-
-    .promotion-card:hover .promotion-image {
-      transform: scale(1.05);
+      height: 200px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
     }
 
     .discount-badge {
@@ -89,13 +83,11 @@
       padding: 8px 16px;
       border-radius: 30px;
       font-weight: bold;
-      font-size: 1.1rem;
       box-shadow: 0 5px 15px rgba(0,0,0,0.3);
       z-index: 2;
       display: flex;
       flex-direction: column;
       align-items: center;
-      line-height: 1.2;
     }
 
     .discount-badge .percent {
@@ -104,7 +96,6 @@
 
     .discount-badge .off {
       font-size: 0.7rem;
-      opacity: 0.9;
     }
 
     .promotion-info {
@@ -136,12 +127,6 @@
       color: #666;
     }
 
-    .promotion-dates span {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
     .active-banner {
       background: rgba(39, 174, 96, 0.15);
       border: 1px solid rgba(39, 174, 96, 0.3);
@@ -149,9 +134,7 @@
       border-radius: 20px;
       font-size: 0.7rem;
       color: #27ae60;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
+      display: inline-block;
       margin-top: 0.5rem;
     }
 
@@ -166,88 +149,54 @@
       font-weight: 600;
       cursor: pointer;
       margin-top: 1rem;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
+      transition: all 0.3s;
     }
 
     .btn-shop:hover {
       transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(102,126,234,0.4);
-      gap: 12px;
     }
 
     .no-promotions {
       text-align: center;
       padding: 4rem;
-      background: linear-gradient(135deg, #111, #0a0a0a);
+      background: #111;
       border-radius: 20px;
-      border: 1px solid rgba(102,126,234,0.15);
-    }
-
-    .no-promotions h3 {
-      font-size: 1.5rem;
-      margin-bottom: 1rem;
-      background: linear-gradient(135deg, #fff, #888);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .no-promotions p {
-      color: #888;
-      margin-bottom: 1.5rem;
-    }
-
-    .no-promotions a {
-      color: #667eea;
-      text-decoration: none;
-      font-weight: 600;
     }
 
     @media (max-width: 768px) {
       .promo-hero {
         padding: 4rem 1.5rem;
       }
-      
       .promo-hero h1 {
         font-size: 2rem;
       }
-      
-      .promo-hero p {
-        font-size: 1rem;
-      }
-      
       .promotions-section {
         padding: 2rem 1rem;
       }
-      
       .promotions-grid {
         grid-template-columns: 1fr;
-        gap: 1.5rem;
       }
     }
   </style>
 </head>
+
 <body>
 
 <%- include('../partials/navbar') %>
 
-<!-- Promotions Hero -->
 <section class="promo-hero">
   <h1>✨ Exclusive Offers</h1>
   <p>Discover limited-time deals on engineered fashion</p>
 </section>
 
-<!-- Promotions Section -->
 <section class="promotions-section">
   <% if (promotions && promotions.length > 0) { %>
     <div class="promotions-grid">
       <% promotions.forEach((promo) => { %>
         <div class="promotion-card">
-          <img src="<%= promo.image || '/images/promo-default.jpg' %>" alt="<%= promo.title %>" class="promotion-image" onerror="this.src='/images/promo-default.jpg'">
+          <div class="promotion-image">
+            🎁
+          </div>
           <div class="discount-badge">
             <span class="percent"><%= promo.discountPercentage %>%</span>
             <span class="off">OFF</span>
@@ -260,10 +209,10 @@
               <span>⏰ Ends: <%= new Date(promo.endDate).toLocaleDateString() %></span>
             </div>
             <div class="active-banner">
-              <span>●</span> ACTIVE OFFER
+              ● ACTIVE OFFER
             </div>
             <button class="btn-shop" onclick="window.location.href='/products'">
-              SHOP NOW <span>→</span>
+              SHOP NOW →
             </button>
           </div>
         </div>
